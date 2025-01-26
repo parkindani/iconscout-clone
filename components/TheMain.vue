@@ -4,13 +4,9 @@ import axios from 'axios';
 
 const config = useRuntimeConfig()
 
-console.log('config', config)
-
 const CLIENT_KEY = config.public.clientId
-const SECRET_KEY = config.public.clientSecretKey
 
 const SEARCH_API_ENDPOINT = 'https://api.iconscout.com/v3/search'
-const DOWNLPAD_API_ENDPOINT = (uuid: string) => `https://api.iconscout.com/v3/items/${uuid}/api-download`
 
 // const tabs = [
 //   { name: 'All', current: true },
@@ -28,31 +24,6 @@ const download_json = async (url: string) => {
   try {
     const response = await axios.get(url)
     return response.data
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-const get_download_url = async (uuid: string) => {
-  try {
-    const response = await axios.post(DOWNLPAD_API_ENDPOINT(uuid), {
-      format: 'json'
-    }, {
-      headers: {
-        'Client-ID': CLIENT_KEY,
-        'Client-Secret': SECRET_KEY,
-        'Content-Type': 'application/json'
-      }
-    })
-    console.log('download response', response)
-    console.log(response.data)
-    const { data: { response: { download: { url } } } } = response
-    if (url) {
-      console.log('download url', url)
-      return url
-    } else {
-      throw new Error('No download url found')
-    }
   } catch (error) {
     console.error(error)
   }
@@ -78,10 +49,15 @@ const search = async () => {
     console.log(data)
 
     await data.forEach(async (d: any) => {
-      const url = await get_download_url(d.uuid)
-      const json = await download_json(url)
-      console.log('json', json)
-      jsons.value.push(json)
+      const url = await $fetch('/api/search', {
+        method: 'POST',
+        body: JSON.stringify({ uuid: d.uuid })
+      })
+      if (url) {
+        const json = await download_json(url as string)
+        console.log('json', json)
+        jsons.value.push(json)
+      }
     })
 
     // console.log('json', json)
