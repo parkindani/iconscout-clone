@@ -2,14 +2,10 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@bootstrap-vue-next/nuxt"],
+  modules: ["@bootstrap-vue-next/nuxt", "@nuxt/eslint"],
   css: ["bootstrap/dist/css/bootstrap.min.css"],
   runtimeConfig: {
+    clientId: "",
     clientSecretKey: "",
-    public: {
-      clientId: "",
-      // TODO: move to private runtime config
-      // clientSecretKey: "",
-    },
   },
 });

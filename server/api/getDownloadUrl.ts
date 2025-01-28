@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const DOWNLOAD_API_ENDPOINT = (uuid: string) =>
   `https://api.iconscout.com/v3/items/${uuid}/api-download`;
@@ -39,15 +39,18 @@ const get_download_url = async ({
       throw new Error("No download url found");
     }
   } catch (error) {
-    console.error(error);
+    if (error instanceof AxiosError) {
+      console.error(error.message, error.response?.data);
+    } else {
+      console.error(error);
+    }
   }
 };
 
 export default defineEventHandler(async (event) => {
-
   const config = useRuntimeConfig();
 
-  const CLIENT_KEY = config.public.clientId;
+  const CLIENT_KEY = config.clientId;
   const SECRET_KEY = config.clientSecretKey;
 
   const { uuid } = await readBody(event);
@@ -56,5 +59,5 @@ export default defineEventHandler(async (event) => {
     clientKey: CLIENT_KEY,
     secretKey: SECRET_KEY,
   });
-  return res
+  return res;
 });

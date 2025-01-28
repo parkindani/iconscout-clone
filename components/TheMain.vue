@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import axios from 'axios';
-
-const config = useRuntimeConfig()
-
-const CLIENT_KEY = config.public.clientId
-
-const SEARCH_API_ENDPOINT = 'https://api.iconscout.com/v3/search'
+import { ref } from "vue";
+import axios from "axios";
+import { $fetch } from "ofetch";
 
 // const tabs = [
 //   { name: 'All', current: true },
@@ -15,57 +10,49 @@ const SEARCH_API_ENDPOINT = 'https://api.iconscout.com/v3/search'
 //   { name: 'Featured', current: false },
 // ]
 
+const jsons = ref<string[]>([]);
 
-const jsons = ref<string[]>([])
-
-const keyword = ref('')
+const keyword = ref("");
 
 const download_json = async (url: string) => {
   try {
-    const response = await axios.get(url)
-    return response.data
+    const response = await axios.get(url);
+    return response.data;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 const search = async () => {
-  jsons.value = []
+  jsons.value = [];
   try {
-    const { data: { response: { items: { data } } } } = await axios.get(SEARCH_API_ENDPOINT, {
-      params: {
-        query: keyword.value,
-        product_type: 'item',
-        asset: 'lottie',
-        price: 'free',
-        per_page: 10,
-        page: 1,
-        sort: 'relevant',
+    const {
+      response: {
+        items: { data },
       },
-      headers: {
-        'Client-ID': CLIENT_KEY
-      }
-    })
-    console.log(data)
+    } = await $fetch(`/api/search/${keyword.value}`, {
+      method: "GET",
+    });
+
+    console.log(data);
 
     await data.forEach(async (d: any) => {
-      const url = await $fetch('/api/search', {
-        method: 'POST',
-        body: JSON.stringify({ uuid: d.uuid })
-      })
+      const url = await $fetch("/api/getDownloadUrl", {
+        method: "POST",
+        body: JSON.stringify({ uuid: d.uuid }),
+      });
       if (url) {
-        const json = await download_json(url as string)
-        console.log('json', json)
-        jsons.value.push(json)
+        const json = await download_json(url as string);
+        console.log("json", json);
+        jsons.value.push(json);
       }
-    })
+    });
 
     // console.log('json', json)
-
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 </script>
 
 <template>
@@ -79,14 +66,25 @@ const search = async () => {
 
     <!-- Search Input -->
     <form>
-      <input v-model="keyword" type="text" placeholder="Search from 8 Million+ assets" />
+      <input
+        v-model="keyword"
+        type="text"
+        placeholder="Search from 8 Million+ assets"
+      />
       <button @click.prevent="search" type="submit">Search</button>
     </form>
 
     <!-- Search Results -->
     <div class="container-fluid py-4">
       <BRow>
-        <BCol v-for="(json, i) in jsons" :key="i" cols="12" sm="6" lg="4" class="mb-4">
+        <BCol
+          v-for="(json, i) in jsons"
+          :key="i"
+          cols="12"
+          sm="6"
+          lg="4"
+          class="mb-4"
+        >
           <ClientOnly>
             <LottieCard :src="json" />
           </ClientOnly>

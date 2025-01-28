@@ -10,9 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@tanstack/vue-query": "^5.64.2",
     "@dotlottie/player-component": "^2.7.12",
     "@lottiefiles/lottie-player": "^2.0.12",
+    "@nuxt/eslint": "^0.7.5",
+    "@tanstack/vue-query": "^5.64.2",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
     "axios": "^1.7.9",
