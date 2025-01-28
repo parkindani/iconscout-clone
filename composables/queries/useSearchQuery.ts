@@ -1,4 +1,4 @@
-import type { Ref } from "vue";
+import { type Ref, computed } from "vue";
 import { search } from "../apis/useSearchApi";
 import { useInfiniteQuery } from "@tanstack/vue-query";
 import { searchKey } from "./queryKeys";
@@ -8,7 +8,7 @@ export const useLottieQuery = (
   { limit = ref(10) } = {}
 ) => {
   return useInfiniteQuery({
-    queryKey: searchKey.lottie(keyword.value, limit.value),
+    queryKey: computed(() => searchKey.lottie(keyword.value, limit.value)),
     queryFn: async ({ pageParam }: { pageParam: number }) =>
       search({ keyword: keyword.value, limit: limit.value, page: pageParam }),
     enabled: !!keyword.value,

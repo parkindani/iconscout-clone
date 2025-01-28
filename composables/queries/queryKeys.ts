@@ -3,7 +3,7 @@ export const searchKey = {
   threeDimensional: (query: string, limit: number) =>
     [[...searchKey.all], "threeDimensional", query, limit] as const,
   lottie: (query: string, limit: number) =>
-    [[...searchKey.all], "lottie", limit, query] as const,
+    [[...searchKey.all], "lottie", query, limit] as const,
   illustration: (query: string) =>
     [[...searchKey.all], "illustration", query] as const,
   icon: (query: string) => [[...searchKey.all], "icon", query] as const,
@@ -11,5 +11,5 @@ export const searchKey = {
 
 export const downloadKey = {
   all: ["download"] as const,
-  asset: (uuid: string) => [[...downloadKey.all], "asset", uuid] as const,
+  asset: (url: string) => [[...downloadKey.all], "asset", url] as const,
 };

@@ -43,7 +43,7 @@ watch(
   }
 );
 
-const allJsons = computed(() =>
+const allUuids = computed(() =>
   lottieData.value?.pages.flatMap((page) => page.results || [])
 );
 </script>
@@ -73,7 +73,7 @@ const allJsons = computed(() =>
     <div class="container-fluid py-4">
       <BRow>
         <BCol
-          v-for="(json, i) in allJsons"
+          v-for="(uuid, i) in allUuids"
           :key="i"
           cols="12"
           sm="6"
@@ -81,7 +81,7 @@ const allJsons = computed(() =>
           class="mb-4"
         >
           <ClientOnly>
-            <LottieCard :src="JSON.stringify(json)" />
+            <LottieCard :uuid="uuid" />
           </ClientOnly>
         </BCol>
       </BRow>

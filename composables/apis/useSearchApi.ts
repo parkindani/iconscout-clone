@@ -1,14 +1,4 @@
-import axios from "axios";
 import { $fetch } from "ofetch";
-
-const download_json = async (url: string) => {
-  try {
-    const response = await axios.get(url);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 export const search = async ({
   keyword,
@@ -26,27 +16,14 @@ export const search = async ({
     }
   );
 
-  console.log("USESEARCHAPI::api response:", response);
   const {
     items: { data, total, last_page, current_page },
   } = response;
 
-  const jsons: string[] = [];
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await data.forEach(async (d: any) => {
-    const url = await $fetch("/api/getDownloadUrl", {
-      method: "POST",
-      body: JSON.stringify({ uuid: d.uuid }),
-    });
-    if (url) {
-      const json = await download_json(url as string);
-      jsons.push(json);
-    }
-  });
+  const uuids = data.map((d: { uuid: string }) => d.uuid);
 
   return {
-    results: jsons,
+    results: uuids,
     total,
     currentPage: current_page,
     lastPage: last_page,
