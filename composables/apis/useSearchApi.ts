@@ -1,16 +1,17 @@
+import type { SearchAssetRequestQuery, SearchAssetResponse } from "~/types/api";
+
 import { $fetch } from "ofetch";
 
 export const search = async ({
   keyword,
   limit,
   page,
-}: {
+  type,
+}: SearchAssetRequestQuery & {
   keyword: string;
-  limit: number;
-  page: number;
 }) => {
-  const { response } = await $fetch(
-    `/api/search/${keyword}?limit=${limit}&page=${page}`,
+  const { response } = await $fetch<SearchAssetResponse<typeof type>>(
+    `/api/search/${keyword}?type=${type}&limit=${limit}&page=${page}`,
     {
       method: "GET",
     }
@@ -20,10 +21,8 @@ export const search = async ({
     items: { data, total, last_page, current_page },
   } = response;
 
-  const uuids = data.map((d: { uuid: string }) => d.uuid);
-
   return {
-    results: uuids,
+    data,
     total,
     currentPage: current_page,
     lastPage: last_page,

@@ -12,4 +12,7 @@ export default defineNuxtConfig({
     clientId: "",
     clientSecretKey: "",
   },
+  routeRules: {
+    "/": { redirect: "/all-assets" },
+  },
 });
