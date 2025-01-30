@@ -2,12 +2,30 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
+const props = defineProps<{
+  path?: string;
+}>();
+
+const pageList: Record<string, string> = {
+  "All Assets": "/all-assets",
+  "3D Illustrations": "/3d-illustrations",
+  "Lottie Animations": "/lottie-animations",
+  Illustrations: "/illustrations",
+  Icons: "/icons",
+};
+
+const dropdownList = Object.keys(pageList);
+
 const router = useRouter();
+const selectedDropdown = ref<string>(props.path || dropdownList[0]);
 const inputValue = ref<string>("");
 
 const search = () => {
   if (inputValue.value.trim()) {
-    router.push(`/all-assets/${encodeURIComponent(inputValue.value)}`);
+    const page = pageList[selectedDropdown.value];
+    if (page) {
+      router.push(`${page}/${encodeURIComponent(inputValue.value)}`);
+    }
   }
 };
 </script>
@@ -26,14 +44,18 @@ const search = () => {
       <b-col cols="auto">
         <b-input-group class="search-input-group">
           <b-dropdown
-            text="3D"
+            :text="selectedDropdown"
             variant="link"
             class="custom-dropdown-button"
             menu-class="dropdown-menu-right"
           >
-            <b-dropdown-item>Illustrations</b-dropdown-item>
-            <b-dropdown-item>Icons</b-dropdown-item>
-            <b-dropdown-item>Animations</b-dropdown-item>
+            <b-dropdown-item
+              v-for="(item, idx) in dropdownList"
+              :key="idx"
+              @click="selectedDropdown = item"
+              :active="item === selectedDropdown"
+              >{{ item }}</b-dropdown-item
+            >
           </b-dropdown>
           <SvgoIcoSearch filled :fontControlled="false" class="search-icon" />
           <b-form-input
@@ -106,7 +128,6 @@ const search = () => {
 }
 
 .search-input-group {
-  width: 360px;
   height: 46px;
   background-color: #ebedf5;
   border: 0;

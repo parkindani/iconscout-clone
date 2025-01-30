@@ -14,7 +14,7 @@ export const useLottieQuery = (
 ) => {
   let initialDataPage = null;
 
-  if (initial.value) {
+  if (initial?.value) {
     const {
       response: {
         items: { data, total, last_page, current_page },
