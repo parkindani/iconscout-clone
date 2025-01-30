@@ -6,8 +6,9 @@ export default defineNuxtConfig({
     "@bootstrap-vue-next/nuxt",
     "@nuxt/eslint",
     "@hebilicious/vue-query-nuxt",
+    "nuxt-svgo",
   ],
-  css: ["bootstrap/dist/css/bootstrap.min.css"],
+  css: ["bootstrap/dist/css/bootstrap.min.css", "~/assets/css/main.css"],
   runtimeConfig: {
     clientId: "",
     clientSecretKey: "",
