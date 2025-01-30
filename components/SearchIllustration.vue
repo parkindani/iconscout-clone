@@ -2,12 +2,17 @@
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useIllustrationQuery } from "~/composables/queries/useSearchQuery";
-
+import { useSsrSearch } from "~/composables/search/useSsrSearch";
 const route = useRoute();
 
-const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
+const query = route.params.query as string; // bring search keyword from URL
 
-const { data: illustrations } = useIllustrationQuery(computed(() => query));
+const { initialData } = await useSsrSearch(query, "illustration");
+
+const { data: illustrations } = useIllustrationQuery(
+  computed(() => query),
+  initialData
+);
 
 const allIllustrationThumbnails = computed(() =>
   illustrations.value?.data.map((d) => d.urls.thumb)

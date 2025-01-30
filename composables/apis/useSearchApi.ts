@@ -10,7 +10,7 @@ export const search = async ({
 }: SearchAssetRequestQuery & {
   keyword: string;
 }) => {
-  const { response } = await $fetch<SearchAssetResponse<typeof type>>(
+  const { response } = await $fetch<SearchAssetResponse>(
     `/api/search/${keyword}?type=${type}&limit=${limit}&page=${page}`,
     {
       method: "GET",

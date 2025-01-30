@@ -2,13 +2,20 @@
 import { useRoute } from "vue-router";
 
 import { computed } from "vue";
+import { useSsrSearch } from "~/composables/search/useSsrSearch";
+
 import { use3DQuery } from "~/composables/queries/useSearchQuery";
 
 const route = useRoute();
 
-const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
+const query = route.params.query as string; // bring search keyword from URL
 
-const { data: threeDData } = use3DQuery(computed(() => query));
+const { initialData } = await useSsrSearch(query, "3d");
+
+const { data: threeDData } = use3DQuery(
+  computed(() => query),
+  initialData
+);
 
 const all3DThumbnails = computed(() =>
   threeDData.value?.data.map((d) => d.urls.thumb)
@@ -26,9 +33,8 @@ const all3DThumbnails = computed(() =>
         lg="4"
         class="mb-4"
       >
-        <ClientOnly>
-          <ImageCard v-if="thumb" :src="thumb" />
-        </ClientOnly>
+        <span>{{ thumb }}</span>
+        <ImageCard v-if="thumb" :src="thumb" />
       </BCol>
     </BRow>
   </div>

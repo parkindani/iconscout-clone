@@ -2,17 +2,25 @@
 import { useRoute } from "vue-router";
 
 import { computed, watch } from "vue";
+
+import { useSsrSearch } from "~/composables/search/useSsrSearch";
+
 import { useLottieQuery } from "~/composables/queries/useSearchQuery";
 
 const route = useRoute();
 
 const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
 
+const { initialData } = await useSsrSearch(query, "lottie");
+
 const {
   data: lottieData,
   fetchNextPage,
   // hasNextPage,
-} = useLottieQuery(computed(() => query));
+} = useLottieQuery(
+  computed(() => query),
+  initialData
+);
 
 watch(
   () => route.params.query,
@@ -39,9 +47,8 @@ const allUuids = computed(() =>
         lg="4"
         class="mb-4"
       >
-        <ClientOnly>
-          <LottieCard :uuid="uuid" />
-        </ClientOnly>
+        <span>lottie: {{ uuid }}</span>
+        <LottieCard :uuid="uuid" />
       </BCol>
     </BRow>
   </div>
