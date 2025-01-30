@@ -61,11 +61,10 @@ const allUuids = computed(() =>
   <div class="container-fluid py-4">
     <div class="d-flex flex-wrap justify-content-start gap-2">
       <div v-for="(uuid, i) in allUuids" :key="i">
-        <LottieCard :uuid="uuid" />
+        <DotLottieCard :uuid="uuid" />
       </div>
     </div>
-
     <!-- MARK: empty div to check end -->
-    <div ref="$bottomRef"></div>
+    <div v-if="!props.onlyFirstPage" ref="$bottomRef"></div>
   </div>
 </template>

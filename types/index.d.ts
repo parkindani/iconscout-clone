@@ -5,4 +5,5 @@ type PageNameType =
   | "3D Illustrations"
   | "Lottie Animations"
   | "Illustrations"
-  | "Icons";
+  | "Icons"
+  | "Dot Lottie";

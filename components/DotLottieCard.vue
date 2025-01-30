@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useDownloadQuery } from "~/composables/queries/useDownloadQuery";
+import { DotLottieVue } from "@lottiefiles/dotlottie-vue";
+
 import BaseCard from "./BaseCard.vue";
 
 const props = defineProps<{
@@ -22,15 +24,8 @@ const lottieData = computed(() => JSON.stringify(data.value));
     </template>
     <template v-else>
       <ClientOnly>
-        <lottie-player autoplay loop :src="lottieData"></lottie-player>
+        <DotLottieVue autoplay loop :data="lottieData"></DotLottieVue>
       </ClientOnly>
     </template>
   </BaseCard>
 </template>
-
-<style scoped>
-.loading {
-  background-color: #d9d9d9;
-  height: 200px;
-}
-</style>

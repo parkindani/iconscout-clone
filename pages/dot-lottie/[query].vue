@@ -7,22 +7,19 @@ const keyword = ref("");
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
+const query = route.params.query as string; // bring the search keyword from the URL parameter
 
 keyword.value = query;
 </script>
 
 <template>
   <div>
-    <TheHeader page="Illustrations" />
+    <TheHeader page="Dot Lottie" />
 
     <main class="flex-grow-1 bg-light">
-      <!-- Search Results -->
-
-      <h2>{{ keyword }} Illustrations</h2>
-      <TheSubNavBar page="Illustrations" />
-
-      <SearchIllustration />
+      <h2>{{ keyword }} Animations</h2>
+      <TheSubNavBar page="Dot Lottie" />
+      <SearchDotLottieAnimation is-dot-lottie />
     </main>
 
     <TheFooter />
