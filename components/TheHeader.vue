@@ -1,4 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue";
+
+const emit = defineEmits(["submit"]);
+
+const inputValue = ref<string>("");
+
+const handleSubmit = () => {
+  emit("submit", inputValue.value);
+};
+</script>
 
 <template>
   <b-navbar type="light" variant="light" class="nav-bar">
@@ -26,8 +36,12 @@
           <b-input-group-prepend is-text>
             <SvgoIcoSearch filled :fontControlled="false" class="search-icon" />
           </b-input-group-prepend>
-          <b-form-input placeholder="Search from 8 Million+ assets" />
-          <b-button variant="link">
+          <b-form-input
+            placeholder="Search from 8 Million+ assets"
+            v-model="inputValue"
+            @keydown.enter="handleSubmit"
+          />
+          <b-button variant="link" @click.prevent="handleSubmit">
             <SvgoIcoImageSearch
               filled
               :fontControlled="false"
