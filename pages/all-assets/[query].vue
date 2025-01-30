@@ -15,10 +15,9 @@ keyword.value = query;
 <template>
   <div>
     <TheHeader page="All Assets" />
-
     <main class="flex-grow-1 bg-light">
+      <TheSubNavBar page="All Assets" />
       <!-- Search Results -->
-
       <h2>{{ keyword }} Illustrations</h2>
       <SearchIllustration />
 

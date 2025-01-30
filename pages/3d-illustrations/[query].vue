@@ -19,6 +19,7 @@ keyword.value = query;
       <!-- Search Results -->
 
       <h2>{{ keyword }} 3D Illustrations</h2>
+      <TheSubNavBar page="3D Illustrations" />
       <Search3DIllustration />
     </main>
 

@@ -17,9 +17,9 @@ keyword.value = query;
     <TheHeader page="Lottie Animations" />
 
     <main class="flex-grow-1 bg-light">
-      <!-- Search Results -->
-
       <h2>{{ keyword }} Animations</h2>
+      <TheSubNavBar page="Lottie Animations" />
+
       <SearchLottieAnimation />
     </main>
 

@@ -20,6 +20,8 @@ keyword.value = query;
       <!-- Search Results -->
 
       <h2>{{ keyword }} Illustrations</h2>
+      <TheSubNavBar page="Illustrations" />
+
       <SearchIllustration />
 
       <SearchIcon />

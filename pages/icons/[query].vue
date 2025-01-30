@@ -19,6 +19,7 @@ keyword.value = query;
     <main class="flex-grow-1 bg-light">
       <!-- Search Results -->
       <h2>{{ keyword }} Icons</h2>
+      <TheSubNavBar page="Icons" />
       <SearchIcon />
     </main>
 

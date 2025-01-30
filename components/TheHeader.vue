@@ -1,25 +1,13 @@
 <script setup lang="ts">
+import type { PageNameType } from "~/types";
+
 import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
-type PageNameType =
-  | "All Assets"
-  | "3D Illustrations"
-  | "Lottie Animations"
-  | "Illustrations"
-  | "Icons";
+import { pageList } from "~/assets/constants";
 
 const props = defineProps<{
   page?: PageNameType;
 }>();
-
-const pageList: Record<PageNameType, string> = {
-  "All Assets": "/all-assets",
-  "3D Illustrations": "/3d-illustrations",
-  "Lottie Animations": "/lottie-animations",
-  Illustrations: "/illustrations",
-  Icons: "/icons",
-};
 
 const dropdownList = Object.keys(pageList);
 
@@ -40,81 +28,89 @@ const search = () => {
 </script>
 
 <template>
-  <b-navbar type="light" variant="light" class="nav-bar">
-    <b-row class="align-items-center w-100">
-      <!-- Logo and Brand Name -->
-      <b-col cols="auto" class="d-flex align-items-center">
-        <b-navbar-brand href="#" class="d-flex align-items-center">
-          <SvgoLogo filled :fontControlled="false" class="logo" />
-        </b-navbar-brand>
-      </b-col>
+  <header>
+    <b-navbar type="light" variant="light" class="nav-bar shadow-sm">
+      <b-row class="align-items-center w-100">
+        <!-- Logo and Brand Name -->
+        <b-col cols="auto" class="d-flex align-items-center">
+          <b-navbar-brand href="#" class="d-flex align-items-center">
+            <SvgoLogo filled :fontControlled="false" class="logo" />
+          </b-navbar-brand>
+        </b-col>
 
-      <!-- Search Bar -->
-      <b-col cols="auto">
-        <b-input-group class="search-input-group">
-          <b-dropdown
-            :text="selectedDropdown"
-            variant="link"
-            class="custom-dropdown-button"
-            menu-class="dropdown-menu-right"
-          >
-            <b-dropdown-item
-              v-for="(item, idx) in dropdownList"
-              :key="idx"
-              @click="selectedDropdown = item"
-              :active="item === selectedDropdown"
-              >{{ item }}</b-dropdown-item
+        <!-- Search Bar -->
+        <b-col cols="auto">
+          <b-input-group class="search-input-group">
+            <b-dropdown
+              :text="selectedDropdown"
+              variant="link"
+              class="custom-dropdown-button"
+              menu-class="dropdown-menu-right"
             >
-          </b-dropdown>
-          <SvgoIcoSearch filled :fontControlled="false" class="search-icon" />
-          <b-form-input
-            placeholder="Search from 8 Million+ assets"
-            v-model="inputValue"
-            @keydown.enter="search"
-          />
-          <b-button variant="link" @click.prevent="search">
-            <SvgoIcoImageSearch
-              filled
-              :fontControlled="false"
-              class="image-search-icon"
+              <b-dropdown-item
+                v-for="(item, idx) in dropdownList"
+                :key="idx"
+                @click="selectedDropdown = item"
+                :active="item === selectedDropdown"
+                >{{ item }}</b-dropdown-item
+              >
+            </b-dropdown>
+            <SvgoIcoSearch filled :fontControlled="false" class="search-icon" />
+            <b-form-input
+              placeholder="Search from 8 Million+ assets"
+              v-model="inputValue"
+              @keydown.enter="search"
             />
-          </b-button>
-        </b-input-group>
-      </b-col>
+            <b-button variant="link" @click.prevent="search">
+              <SvgoIcoImageSearch
+                filled
+                :fontControlled="false"
+                class="image-search-icon"
+              />
+            </b-button>
+          </b-input-group>
+        </b-col>
 
-      <!-- Navigation Links -->
-      <b-col cols="auto" class="d-flex align-items-center me-auto">
-        <b-navbar-nav class="navbar-nav gx-3">
-          <b-nav-item href="#"
-            >Explore
-            <SvgoIcoAngleDown />
-          </b-nav-item>
-          <b-nav-item href="#"
-            >Tools
-            <SvgoIcoAngleDown />
-          </b-nav-item>
-          <b-nav-item href="#">All Features</b-nav-item>
-          <b-nav-item href="#">
-            <SvgoIcoGift filled />
-            Free Assset</b-nav-item
-          >
-          <b-nav-item href="#"
-            >Learn
-            <SvgoIcoAngleDown />
-          </b-nav-item>
-        </b-navbar-nav>
-      </b-col>
+        <!-- Navigation Links -->
+        <b-col cols="auto" class="d-flex align-items-center me-auto">
+          <b-navbar-nav class="navbar-nav gx-3">
+            <b-nav-item href="#"
+              >Explore
+              <SvgoIcoAngleDown />
+            </b-nav-item>
+            <b-nav-item href="#"
+              >Tools
+              <SvgoIcoAngleDown />
+            </b-nav-item>
+            <b-nav-item href="#">All Features</b-nav-item>
+            <b-nav-item href="#">
+              <SvgoIcoGift filled />
+              Free Assset</b-nav-item
+            >
+            <b-nav-item href="#"
+              >Learn
+              <SvgoIcoAngleDown />
+            </b-nav-item>
+          </b-navbar-nav>
+        </b-col>
 
-      <!-- Buttons -->
-      <b-col cols="auto" class="d-flex align-items-center ms-auto buttons">
-        <base-button type="line">Login</base-button>
-        <base-button type="primary">Signup</base-button>
-      </b-col>
-    </b-row>
-  </b-navbar>
+        <!-- Buttons -->
+        <b-col cols="auto" class="d-flex align-items-center ms-auto buttons">
+          <base-button type="line">Login</base-button>
+          <base-button type="primary">Signup</base-button>
+        </b-col>
+      </b-row>
+    </b-navbar>
+  </header>
 </template>
 
 <style lang="scss" scoped>
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
 .nav-bar {
   background-color: #ffffff !important;
 }
@@ -181,6 +177,7 @@ const search = () => {
   font-weight: 600;
   font-size: 16px;
   line-height: 19.78px;
+  color: #2e334d;
 }
 
 .buttons {
