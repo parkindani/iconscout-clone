@@ -46,9 +46,7 @@ const legal = [
 <template>
   <footer>
     <b-container fluid class="text-dark container">
-      <b-row
-        class="footer-head d-flex justify-content-between align-items-center py-4"
-      >
+      <b-row class="footer-head py-4">
         <b-col class="d-flex flex-row align-items-center">
           <SvgoLogo filled :fontControlled="false" class="logo" />
           <p class="my-auto px-2">Design Resource Marketplace</p>
@@ -62,61 +60,53 @@ const legal = [
       </b-row>
       <b-row class="justify-content-between align-items-start py-4">
         <!-- Footer Links -->
-        <b-col md="6">
+        <b-col md="9" class="links">
           <b-row>
             <b-col md="3">
               <h6>Graphic Resources</h6>
-              <b-list-group variant="flush">
+              <b-list-group>
                 <b-list-group-item
                   v-for="item in graphicResources"
                   :key="item.text"
-                  class="bg-light border-0 px-0"
+                  class="border-0 px-0 bg-transparent"
                 >
-                  <a :href="item.link" class="text-dark text-decoration-none">{{
-                    item.text
-                  }}</a>
+                  <a :href="item.link">{{ item.text }}</a>
                 </b-list-group-item>
               </b-list-group>
             </b-col>
             <b-col md="3">
               <h6>Products</h6>
-              <b-list-group variant="flush">
+              <b-list-group>
                 <b-list-group-item
                   v-for="item in products"
                   :key="item.text"
-                  class="bg-light border-0 px-0"
+                  class="bg-transparent border-0 px-0"
                 >
-                  <a :href="item.link" class="text-dark text-decoration-none">{{
-                    item.text
-                  }}</a>
+                  <a :href="item.link">{{ item.text }}</a>
                 </b-list-group-item>
               </b-list-group>
             </b-col>
             <b-col md="3">
               <h6>Company</h6>
-              <b-list-group variant="flush">
+              <b-list-group>
                 <b-list-group-item
                   v-for="item in company"
                   :key="item.text"
-                  class="bg-light border-0 px-0"
+                  class="bg-transparent border-0 px-0"
                 >
-                  <a :href="item.link" class="text-dark text-decoration-none">{{
-                    item.text
-                  }}</a>
+                  <a :href="item.link">{{ item.text }}</a>
                 </b-list-group-item>
               </b-list-group>
             </b-col>
             <b-col md="3">
               <h6>Legal</h6>
-              <b-list-group variant="flush">
+              <b-list-group>
                 <b-list-group-item
                   v-for="item in legal"
                   :key="item.text"
-                  class="bg-light border-0 px-0"
+                  class="bg-transparent border-0 px-0"
                 >
-                  <a :href="item.link" class="text-dark text-decoration-none">{{
-                    item.text
-                  }}</a>
+                  <a :href="item.link">{{ item.text }}</a>
                 </b-list-group-item>
               </b-list-group>
             </b-col>
@@ -124,47 +114,60 @@ const legal = [
         </b-col>
 
         <!-- Social and App Links -->
-        <b-col md="2" class="text-left">
+        <b-col md="3" class="text-left">
           <h6>Get IconScout for Desktop</h6>
-          <b-img src="/img/os-icons.png" alt="Apple" class="me-2"></b-img>
-
-          <h6 class="mt-3">Get LottieFiles Mobile App</h6>
           <b-img
-            src="/img/logo-app-store.png"
-            alt="App Store"
-            class="me-2 mt-2"
-          ></b-img>
-          <b-img
-            src="/img/logo-play-store.png"
-            alt="Google Play"
-            class="mt-2"
+            src="/img/os-icons.png"
+            alt="Apple"
+            class="os-icons mt-2"
           ></b-img>
 
-          <h6 class="mt-3">Follow Us</h6>
+          <h6 class="mt-5">Get LottieFiles Mobile App</h6>
+          <div class="mt-2 store-logos">
+            <b-img
+              src="/img/logo-app-store.png"
+              alt="App Store"
+              class="me-2"
+            ></b-img>
+            <b-img src="/img/logo-play-store.png" alt="Google Play"></b-img>
+          </div>
+
+          <h6 class="mt-5">Follow Us</h6>
           <div>
-            <b-img src="/img/sns-icons.png"></b-img>
+            <b-img src="/img/sns-icons.png" class="mt-2 sns-icons"></b-img>
           </div>
         </b-col>
       </b-row>
-
-      <hr class="bg-secondary my-3" />
-
-      <!-- Bottom Footer -->
-      <b-row class="justify-content-between align-items-center">
+    </b-container>
+    <!-- Bottom Footer -->
+    <div class="bottom">
+      <b-row class="justify-content-between align-items-center bottom-row">
         <b-col md="6">
-          <p>© 2021 Design Barn Inc. Made with ❤️ in India</p>
+          <p class="my-auto copyright">
+            © 2021 Design Barn Inc. Made with ❤️ in India
+          </p>
         </b-col>
-        <b-col md="6" class="text-end">
-          <p class="mb-0">Secure Payments</p>
-          <b-img src="/img/logo-stripe.svg" alt="Stripe"></b-img>
+        <b-col
+          md="6"
+          class="text-end d-flex flex-row justify-content-end align-items-center"
+        >
+          <SvgoIcoYellowLock filled :fontControlled="false" class="lock" />
+          <p class="my-auto stripe">Secure Payments</p>
+          <b-img
+            src="/img/logo-stripe.svg"
+            alt="Stripe"
+            class="stripe-logo"
+          ></b-img>
         </b-col>
       </b-row>
-    </b-container>
+    </div>
   </footer>
 </template>
 
 <style lang="scss" scoped>
 footer {
+  font-size: 14px;
+  line-height: 21px;
   background-color: #ebedf5;
 
   .container {
@@ -177,6 +180,77 @@ footer {
     .logo {
       height: 35.85px;
       width: 185.32px;
+    }
+
+    h6 {
+      color: #2e334c;
+      font-weight: 700;
+      text-wrap: nowrap;
+    }
+
+    .links {
+      line-height: 24px;
+      text-wrap: nowrap;
+
+      a {
+        font-weight: 400;
+        color: #424866;
+        text-decoration: none;
+      }
+    }
+
+    img.os-icons {
+      width: 94px;
+    }
+
+    .store-logos {
+      display: flex;
+      justify-content: start;
+
+      img {
+        width: 118.25px;
+      }
+    }
+
+    img.sns-icons {
+      width: 241px;
+    }
+  }
+
+  .bottom {
+    display: flex;
+    justify-content: center;
+    background-color: #d8dbeb;
+    height: 88px;
+
+    .bottom-row {
+      width: 1113px;
+    }
+    .lock {
+      width: 24px;
+      height: 24px;
+    }
+
+    p {
+      font-family: "Karla", sans-serif;
+      color: #424866;
+      font-size: 14px;
+      line-height: 24px;
+    }
+
+    .copyright {
+      font-weight: 400;
+    }
+
+    .stripe {
+      font-weight: 200;
+      font-style: italic;
+    }
+
+    .stripe-logo {
+      width: 83.9px;
+      height: 40px;
+      margin-left: 23px;
     }
   }
 }
