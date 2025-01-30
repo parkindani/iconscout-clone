@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-const emit = defineEmits(["submit"]);
-
+const router = useRouter();
 const inputValue = ref<string>("");
 
-const handleSubmit = () => {
-  emit("submit", inputValue.value);
+const search = () => {
+  if (inputValue.value.trim()) {
+    router.push(`/all-assets/${encodeURIComponent(inputValue.value)}`);
+  }
 };
 </script>
 
@@ -33,15 +35,13 @@ const handleSubmit = () => {
             <b-dropdown-item>Icons</b-dropdown-item>
             <b-dropdown-item>Animations</b-dropdown-item>
           </b-dropdown>
-          <b-input-group-prepend is-text>
-            <SvgoIcoSearch filled :fontControlled="false" class="search-icon" />
-          </b-input-group-prepend>
+          <SvgoIcoSearch filled :fontControlled="false" class="search-icon" />
           <b-form-input
             placeholder="Search from 8 Million+ assets"
             v-model="inputValue"
-            @keydown.enter="handleSubmit"
+            @keydown.enter="search"
           />
-          <b-button variant="link" @click.prevent="handleSubmit">
+          <b-button variant="link" @click.prevent="search">
             <SvgoIcoImageSearch
               filled
               :fontControlled="false"
