@@ -1,5 +1,11 @@
+<script setup lang="ts">
+const props = defineProps<{
+  isIconCard?: boolean;
+}>();
+</script>
+
 <template>
-  <div class="card-container">
+  <div class="card-container" :class="{ 'icon-card': props.isIconCard }">
     <slot></slot>
     <button class="folder-icon">
       <SvgoIcoFolderPlus filled />
@@ -53,5 +59,10 @@
       visibility: visible;
     }
   }
+}
+
+.icon-card {
+  height: 140px;
+  width: 140px;
 }
 </style>

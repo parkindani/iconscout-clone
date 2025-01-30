@@ -6,11 +6,12 @@ const props = defineProps<{
    */
   src: string;
   name?: string;
+  isIcon?: boolean;
 }>();
 </script>
 
 <template>
-  <BaseCard>
+  <BaseCard :is-icon-card="props.isIcon">
     <img :src="props.src" :alt="props.name || 'Image'" />
   </BaseCard>
 </template>

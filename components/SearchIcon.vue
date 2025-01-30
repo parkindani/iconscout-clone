@@ -25,7 +25,7 @@ const allIconThumbnails = computed(() =>
   <div class="container-fluid py-4">
     <div class="d-flex flex-wrap justify-content-start gap-2">
       <div v-for="(thumb, i) in allIconThumbnails" :key="i">
-        <ImageCard v-if="thumb" :src="thumb" />
+        <ImageCard v-if="thumb" :src="thumb" is-icon />
       </div>
     </div>
   </div>
