@@ -14,7 +14,7 @@ keyword.value = query;
 
 <template>
   <div>
-    <TheHeader path="Icons" />
+    <TheHeader page="Icons" />
 
     <main class="flex-grow-1 bg-light">
       <!-- Search Results -->

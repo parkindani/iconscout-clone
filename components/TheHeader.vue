@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+type PageNameType =
+  | "All Assets"
+  | "3D Illustrations"
+  | "Lottie Animations"
+  | "Illustrations"
+  | "Icons";
 
 const props = defineProps<{
-  path?: string;
+  page?: PageNameType;
 }>();
 
-const pageList: Record<string, string> = {
+const pageList: Record<PageNameType, string> = {
   "All Assets": "/all-assets",
   "3D Illustrations": "/3d-illustrations",
   "Lottie Animations": "/lottie-animations",
@@ -17,12 +24,14 @@ const pageList: Record<string, string> = {
 const dropdownList = Object.keys(pageList);
 
 const router = useRouter();
-const selectedDropdown = ref<string>(props.path || dropdownList[0]);
-const inputValue = ref<string>("");
+const route = useRoute();
+const query = computed(() => route.params.query as string);
+const selectedDropdown = ref<string>(props.page || dropdownList[0]);
+const inputValue = ref<string>(query.value || "");
 
 const search = () => {
   if (inputValue.value.trim()) {
-    const page = pageList[selectedDropdown.value];
+    const page = pageList[selectedDropdown.value as PageNameType];
     if (page) {
       router.push(`${page}/${encodeURIComponent(inputValue.value)}`);
     }

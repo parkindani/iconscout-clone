@@ -14,7 +14,7 @@ keyword.value = query;
 
 <template>
   <div>
-    <TheHeader />
+    <TheHeader page="All Assets" />
 
     <main class="flex-grow-1 bg-light">
       <!-- Search Results -->
@@ -26,7 +26,7 @@ keyword.value = query;
       <Search3DIllustration />
 
       <h2>{{ keyword }} Animations</h2>
-      <SearchLottieAnimation />
+      <SearchLottieAnimation only-first-page />
 
       <h2>{{ keyword }} Icons</h2>
       <SearchIcon />

@@ -1,32 +1,52 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-
-import { computed, watch } from "vue";
+import { ref, computed, watch } from "vue";
 
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
-
 import { useLottieQuery } from "~/composables/queries/useSearchQuery";
+import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
 
 const route = useRoute();
+const query = route.params.query as string; // bring search keyword from URL
 
-const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
+const props = defineProps<{
+  onlyFirstPage?: boolean;
+}>();
 
 const { initialData } = await useSsrSearch(query, "lottie");
 
 const {
   data: lottieData,
   fetchNextPage,
-  // hasNextPage,
+  hasNextPage,
 } = useLottieQuery(
   computed(() => query),
   initialData
 );
 
+const { $targetRef: $bottomRef, isIntersecting } = useIntersectionObserver({
+  onIntersect: (isIntersecting) => {
+    if (props.onlyFirstPage) return;
+    if (!isIntersecting || !hasNextPage.value || !query) return;
+    return fetchNextPage();
+  },
+});
+
+const isInitialSearchLoading = ref(true);
+
 watch(
-  () => route.params.query,
-  (newKeyword, oldKeyword) => {
-    if (newKeyword !== oldKeyword) {
+  [
+    () => query,
+    () => isInitialSearchLoading.value,
+    () => isIntersecting.value,
+    () => hasNextPage.value,
+  ],
+  () => {
+    if (!isInitialSearchLoading.value || !query) return;
+    if (isIntersecting.value || !hasNextPage.value) {
       fetchNextPage();
+    } else {
+      isInitialSearchLoading.value = false;
     }
   }
 );
@@ -51,5 +71,8 @@ const allUuids = computed(() =>
         <LottieCard :uuid="uuid" />
       </BCol>
     </BRow>
+
+    <!-- MARK: empty div to check end -->
+    <div ref="$bottomRef"></div>
   </div>
 </template>

@@ -14,7 +14,7 @@ keyword.value = query;
 
 <template>
   <div>
-    <TheHeader />
+    <TheHeader page="Lottie Animations" />
 
     <main class="flex-grow-1 bg-light">
       <!-- Search Results -->
