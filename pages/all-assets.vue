@@ -49,16 +49,6 @@ const submit = (val: string) => {
     <TheHeader @submit="submit" />
 
     <main class="flex-grow-1 bg-light">
-      <!-- Search Input -->
-      <!-- <form>
-        <input
-          v-model="inputValue"
-          type="text"
-          placeholder="Search from 8 Million+ assets"
-        />
-        <button @click.prevent="submit" type="submit">Search</button>
-      </form> -->
-
       <!-- Search Results -->
 
       <h2>{{ keyword }} 3D Illustrations</h2>
@@ -133,5 +123,7 @@ const submit = (val: string) => {
         </BRow>
       </div>
     </main>
+
+    <TheFooter />
   </div>
 </template>
