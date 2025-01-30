@@ -21,18 +21,10 @@ const allIllustrationThumbnails = computed(() =>
 
 <template>
   <div class="container-fluid py-4">
-    <BRow>
-      <BCol
-        v-for="(thumb, i) in allIllustrationThumbnails"
-        :key="i"
-        cols="12"
-        sm="6"
-        lg="4"
-        class="mb-4"
-      >
-        <span>{{ thumb }}</span>
+    <div class="d-flex flex-wrap justify-content-start gap-2">
+      <div v-for="(thumb, i) in allIllustrationThumbnails" :key="i">
         <ImageCard v-if="thumb" :src="thumb" />
-      </BCol>
-    </BRow>
+      </div>
+    </div>
   </div>
 </template>

@@ -1,13 +1,57 @@
 <template>
   <div class="card-container">
-    <article>
-      <slot></slot>
-    </article>
+    <slot></slot>
+    <button class="folder-icon">
+      <SvgoIcoFolderPlus filled />
+    </button>
+    <button class="arrow-icon">
+      <SvgoIcoArrowBottom filled />
+    </button>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .card-container {
+  text-align: center;
+  cursor: pointer;
   position: relative;
+  height: 210px;
+  width: 280px;
+  padding: 8px 12px;
+  border-top-left-radius: 8px 12px;
+  border-top-right-radius: 8px 12px;
+  border-bottom-right-radius: 8px 12px;
+  border-bottom-left-radius: 8px 12px;
+  background-color: #ffffff;
+
+  button {
+    border: none;
+    background-color: white;
+    color: white;
+    position: absolute;
+    border-radius: 6px;
+    visibility: hidden;
+  }
+
+  .folder-icon {
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .arrow-icon {
+    bottom: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+  }
+
+  &:hover {
+    background-color: rgba(46, 51, 76, 0.2);
+    button {
+      visibility: visible;
+    }
+  }
 }
 </style>

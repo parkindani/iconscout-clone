@@ -15,7 +15,6 @@ const dropdownList = Object.keys(pageList);
 
 const onClick = (title: string) => {
   const page = pageList[title as PageNameType];
-
   if (page === props.page) {
     return;
   }

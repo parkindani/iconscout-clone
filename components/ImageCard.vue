@@ -14,3 +14,11 @@ const props = defineProps<{
     <img :src="props.src" :alt="props.name || 'Image'" />
   </BaseCard>
 </template>
+
+<style scoped>
+img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+</style>

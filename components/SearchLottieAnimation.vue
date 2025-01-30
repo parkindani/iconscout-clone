@@ -58,21 +58,13 @@ const allUuids = computed(() =>
 
 <template>
   <div class="container-fluid py-4">
-    <BRow>
-      <BCol
-        v-for="(uuid, i) in allUuids"
-        :key="i"
-        cols="12"
-        sm="6"
-        lg="4"
-        class="mb-4"
-      >
-        <span>lottie: {{ uuid }}</span>
+    <div class="d-flex flex-wrap justify-content-start gap-2">
+      <div v-for="(uuid, i) in allUuids" :key="i">
         <LottieCard :uuid="uuid" />
-      </BCol>
-    </BRow>
+      </div>
+    </div>
 
     <!-- MARK: empty div to check end -->
-    <div ref="$bottomRef"></div>
+    <div v-if="!props.onlyFirstPage" ref="$bottomRef"></div>
   </div>
 </template>
