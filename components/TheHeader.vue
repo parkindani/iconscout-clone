@@ -5,6 +5,8 @@ import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { pageList } from "~/assets/constants";
 
+import { useFakeAuth } from "~/composables/useFakeAuth";
+
 const props = defineProps<{
   page?: PageNameType;
 }>();
@@ -13,6 +15,8 @@ const dropdownList = Object.keys(pageList);
 
 const router = useRouter();
 const route = useRoute();
+const { login, logout, isAuthenticated } = useFakeAuth();
+
 const query = computed(() => route.params.query as string);
 const selectedDropdown = ref<string>(props.page || dropdownList[0]);
 const inputValue = ref<string>(query.value || "");
@@ -96,7 +100,10 @@ const search = () => {
 
         <!-- Buttons -->
         <b-col cols="auto" class="d-flex align-items-center ms-auto buttons">
-          <base-button type="line">Login</base-button>
+          <base-button v-if="isAuthenticated" @click="logout" type="line"
+            >Logout</base-button
+          >
+          <base-button v-else @click="login" type="line">Login</base-button>
           <base-button type="primary">Signup</base-button>
         </b-col>
       </b-row>
