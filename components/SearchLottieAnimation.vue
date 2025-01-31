@@ -5,6 +5,12 @@ import { ref, computed, watch } from "vue";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useLottieQuery } from "~/composables/queries/useSearchQuery";
 import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
+import { useSearchSEO } from "~/composables/useSearchSEO";
+
+useSearchSEO(
+  computed(() => query),
+  "Lottie Animations"
+);
 
 const route = useRoute();
 const query = route.params.query as string; // bring search keyword from URL
@@ -15,7 +21,6 @@ const props = defineProps<{
 }>();
 
 const { initialData } = await useSsrSearch(query, "lottie");
-
 const {
   data: lottieData,
   fetchNextPage,

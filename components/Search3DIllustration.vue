@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-
 import { computed } from "vue";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
-
 import { use3DQuery } from "~/composables/queries/useSearchQuery";
+import { useSearchSEO } from "~/composables/useSearchSEO";
+
+useSearchSEO(
+  computed(() => query),
+  "3D Illustrations"
+);
 
 const route = useRoute();
-
 const query = route.params.query as string; // bring search keyword from URL
 
 const { initialData } = await useSsrSearch(query, "3d");
-
 const { data: threeDData } = use3DQuery(
   computed(() => query),
   initialData

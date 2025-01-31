@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-
 import { computed } from "vue";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useIconQuery } from "~/composables/queries/useSearchQuery";
+import { useSearchSEO } from "~/composables/useSearchSEO";
+
+useSearchSEO(
+  computed(() => query),
+  "Icons"
+);
 
 const route = useRoute();
-
 const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
 
 const { initialData } = await useSsrSearch(query, "icon");
-
 const { data: threeDData } = useIconQuery(
   computed(() => query),
   initialData

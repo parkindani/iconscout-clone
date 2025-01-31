@@ -3,12 +3,17 @@ import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useIllustrationQuery } from "~/composables/queries/useSearchQuery";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
-const route = useRoute();
+import { useSearchSEO } from "~/composables/useSearchSEO";
 
+useSearchSEO(
+  computed(() => query),
+  "Illustrations"
+);
+
+const route = useRoute();
 const query = route.params.query as string; // bring search keyword from URL
 
 const { initialData } = await useSsrSearch(query, "illustration");
-
 const { data: illustrations } = useIllustrationQuery(
   computed(() => query),
   initialData
