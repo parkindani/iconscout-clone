@@ -1,7 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { ref } from "vue";
-import TheHeader from "~/components/TheHeader.vue";
 
 const keyword = ref("");
 import { useRoute } from "vue-router";

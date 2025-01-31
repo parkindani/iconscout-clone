@@ -16,4 +16,10 @@ export default defineNuxtConfig({
   routeRules: {
     "/": { redirect: "/all-assets" },
   },
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) =>
+        tag.startsWith("dot-lottie") || tag.startsWith("lottie"),
+    },
+  },
 });

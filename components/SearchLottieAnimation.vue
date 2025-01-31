@@ -58,14 +58,14 @@ const allUuids = computed(() =>
 </script>
 
 <template>
-  <div class="container-fluid py-4">
+  <section class="container-fluid py-4">
     <div class="d-flex flex-wrap justify-content-start gap-2">
-      <div v-for="(uuid, i) in allUuids" :key="i">
+      <article v-for="(uuid, i) in allUuids" :key="i">
         <LottieCard :uuid="uuid" />
-      </div>
+      </article>
     </div>
 
     <!-- MARK: empty div to check end -->
     <div ref="$bottomRef"></div>
-  </div>
+  </section>
 </template>

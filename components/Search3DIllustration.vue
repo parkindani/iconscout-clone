@@ -23,11 +23,11 @@ const all3DThumbnails = computed(() =>
 </script>
 
 <template>
-  <div class="container-fluid py-4">
+  <section class="container-fluid py-4">
     <div class="d-flex flex-wrap justify-content-start gap-2">
-      <div v-for="(thumb, i) in all3DThumbnails" :key="i">
+      <article v-for="(thumb, i) in all3DThumbnails" :key="i">
         <ImageCard v-if="thumb" :src="thumb" />
-      </div>
+      </article>
     </div>
-  </div>
+  </section>
 </template>
