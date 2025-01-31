@@ -34,7 +34,7 @@ const search = () => {
 <template>
   <header>
     <b-navbar type="light" variant="light" class="nav-bar shadow-sm">
-      <b-row class="align-items-center w-100">
+      <b-row class="align-items-center w-100 flex-nowrap">
         <!-- Logo and Brand Name -->
         <b-col cols="auto" class="d-flex align-items-center">
           <b-navbar-brand href="#" class="d-flex align-items-center">

@@ -44,5 +44,6 @@ const onClick = (title: string) => {
   z-index: 900;
   background-color: #fafafc;
   column-gap: 23px;
+  padding: 0 20px;
 }
 </style>
