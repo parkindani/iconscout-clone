@@ -16,21 +16,13 @@ keyword.value = query;
   <div>
     <TheHeader page="All Assets" />
     <main class="flex-grow-1 bg-light">
-      <TheSubNavBar page="All Assets" />
+      <SubNavBar page="All Assets" />
       <!-- Search Results -->
-      <h2>{{ keyword }} Illustrations</h2>
-      <SearchIllustration />
-
-      <h2>{{ keyword }} 3D Illustrations</h2>
-      <Search3DIllustration />
-
-      <h2>{{ keyword }} Animations</h2>
-      <SearchLottieAnimation only-first-page />
-
-      <h2>{{ keyword }} Icons</h2>
-      <SearchIcon />
+      <SearchIllustration hide-sub-nav-bar />
+      <Search3DIllustration hide-sub-nav-bar />
+      <SearchLottieAnimation hide-sub-nav-bar only-first-page />
+      <SearchIcon hide-sub-nav-bar />
     </main>
-
     <TheFooter />
   </div>
 </template>

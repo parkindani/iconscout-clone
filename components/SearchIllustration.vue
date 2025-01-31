@@ -8,6 +8,10 @@ import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
 const route = useRoute();
 const query = route.params.query as string; // bring search keyword from URL
 
+const props = defineProps<{
+  hideSubNavBar?: boolean;
+}>();
+
 useSearchSEO(
   computed(() => query),
   "Illustrations"
@@ -29,6 +33,8 @@ const allIllustrations = computed(
     }) || []
 );
 
+const total = computed(() => illustrations.value?.total || 0);
+
 useJsonLdImagesSEO(
   computed(() => query),
   "Illustrations",
@@ -37,6 +43,8 @@ useJsonLdImagesSEO(
 </script>
 
 <template>
+  <SubHeader :count="total" label="Illustrations" />
+  <SubNavBar v-if="!props.hideSubNavBar" page="Illustrations" />
   <section class="container-fluid py-4">
     <div
       role="region"

@@ -17,7 +17,7 @@ useSearchSEO(
 
 const props = defineProps<{
   onlyFirstPage?: boolean;
-  isDotLottie?: boolean;
+  hideSubNavBar?: boolean;
 }>();
 
 const { initialData } = await useSsrSearch(query, "lottie");
@@ -67,6 +67,8 @@ const allLottieAnimations = computed(
     ) || []
 );
 
+const total = computed(() => lottieData.value?.pages[0].total || 0);
+
 useJsonLdLottieSEO(
   computed(() => query),
   allLottieAnimations
@@ -74,6 +76,8 @@ useJsonLdLottieSEO(
 </script>
 
 <template>
+  <SubHeader :count="total" label="Lottie Animations" />
+  <SubNavBar v-if="!props.hideSubNavBar" page="Lottie Animations" />
   <section class="container-fluid py-4">
     <div
       role="region"

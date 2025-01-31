@@ -8,6 +8,10 @@ import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
 const route = useRoute();
 const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
 
+const props = defineProps<{
+  hideSubNavBar?: boolean;
+}>();
+
 useSearchSEO(
   computed(() => query),
   "Icons"
@@ -29,6 +33,8 @@ const allIcons = computed(
     }) || []
 );
 
+const total = computed(() => iconData.value?.total || 0);
+
 useJsonLdImagesSEO(
   computed(() => query),
   "Icons",
@@ -37,6 +43,8 @@ useJsonLdImagesSEO(
 </script>
 
 <template>
+  <SubHeader :count="total" label="Icons" />
+  <SubNavBar v-if="!props.hideSubNavBar" page="Icons" />
   <section class="container-fluid py-4">
     <div class="d-flex flex-wrap justify-content-start gap-2">
       <article v-for="(icon, i) in allIcons" :key="i">
