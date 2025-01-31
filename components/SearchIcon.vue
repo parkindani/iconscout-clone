@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useIconQuery } from "~/composables/queries/useSearchQuery";
 import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
@@ -17,21 +17,35 @@ useSearchSEO(
   "Icons"
 );
 
+const page = ref(1);
+
 const { initialData } = await useSsrSearch(query, "icon");
 const { data: iconData } = useIconQuery(
   computed(() => query),
-  initialData
+  {
+    page,
+  }
 );
 
-const allIcons = computed(
-  () =>
+const allIcons = computed(() => {
+  if (!iconData.value) {
+    const data = initialData.value?.response?.items?.data || [];
+    return data.map((d) => {
+      return {
+        thumb: d.urls.png_256 || "",
+        name: d.name,
+      };
+    });
+  }
+  return (
     iconData.value?.data.map((d) => {
       return {
         thumb: d.urls.png_256 || "",
         name: d.name,
       };
     }) || []
-);
+  );
+});
 
 const total = computed(() => iconData.value?.total || 0);
 
@@ -40,6 +54,16 @@ useJsonLdImagesSEO(
   "Icons",
   allIcons
 );
+
+const goPrevPage = () => {
+  if (page.value === 1) return;
+  page.value -= 1;
+};
+
+const goNextPage = () => {
+  if (iconData.value?.currentPage === iconData.value?.lastPage) return;
+  page.value += 1;
+};
 </script>
 
 <template>
@@ -57,5 +81,12 @@ useJsonLdImagesSEO(
         <span class="sr-only">{{ icon.name }}</span>
       </article>
     </div>
+    <PaginationBar
+      v-if="!props.hideSubNavBar"
+      :current-page="iconData?.currentPage || 1"
+      :last-page="iconData?.lastPage || 1"
+      @prev="goPrevPage"
+      @next="goNextPage"
+    />
   </section>
 </template>

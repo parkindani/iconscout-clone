@@ -84,43 +84,12 @@ const goNextPage = () => {
         <span class="sr-only">{{ thumbnail.name }}</span>
       </article>
     </div>
-    <div v-if="!props.hideSubNavBar" class="pagination">
-      <b-button
-        v-if="(threeDData?.currentPage || 0) > 1"
-        @click="goPrevPage"
-        size="lg"
-        variant="outline-primary"
-        >Prev page</b-button
-      >
-      <b-button @click="goNextPage" size="lg" variant="primary" class="next"
-        >Next page</b-button
-      >
-      <div class="page-stauts">
-        {{ threeDData?.currentPage }} / {{ threeDData?.lastPage }} Pages
-      </div>
-    </div>
+    <PaginationBar
+      v-if="!props.hideSubNavBar"
+      :current-page="threeDData?.currentPage || 1"
+      :last-page="threeDData?.lastPage || 1"
+      @prev="goPrevPage"
+      @next="goNextPage"
+    />
   </section>
 </template>
-
-<style lang="scss" scoped>
-.pagination {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 70px;
-  margin-top: 20px;
-  column-gap: 15px;
-
-  button.next {
-    background-color: #0092e4;
-    border-color: #0092e4;
-  }
-
-  .page-stauts {
-    position: absolute;
-    right: 20px;
-  }
-}
-</style>

@@ -57,28 +57,11 @@ export const useLottieQuery = (
 
 export const useIllustrationQuery = (
   keyword: Ref<string>,
-  initial: Ref<SearchAssetResponse | null>,
   { limit = ref(20), page = ref(1) } = {}
 ) => {
-  let initialData = null;
-
-  if (initial.value) {
-    const {
-      response: {
-        items: { data, total, last_page, current_page },
-      },
-    } = initial.value;
-    initialData = {
-      data,
-      total,
-      lastPage: last_page,
-      currentPage: current_page,
-    };
-  }
-
   return useQuery({
     queryKey: computed(() =>
-      searchKey.illustration(keyword.value, limit.value)
+      searchKey.illustration(keyword.value, limit.value, page.value)
     ),
     queryFn: () =>
       search({
@@ -89,7 +72,7 @@ export const useIllustrationQuery = (
       }),
     enabled: computed(() => !!keyword.value),
     staleTime: 1000 * 60 * 5,
-    ...(initialData && { initialData }),
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -116,27 +99,12 @@ export const use3DQuery = (
 
 export const useIconQuery = (
   keyword: Ref<string>,
-  initial: Ref<SearchAssetResponse | null>,
   { limit = ref(20), page = ref(1) } = {}
 ) => {
-  let initialData = null;
-
-  if (initial.value) {
-    const {
-      response: {
-        items: { data, total, last_page, current_page },
-      },
-    } = initial.value;
-    initialData = {
-      data,
-      total,
-      lastPage: last_page,
-      currentPage: current_page,
-    };
-  }
-
   return useQuery({
-    queryKey: computed(() => searchKey.icon(keyword.value, limit.value)),
+    queryKey: computed(() =>
+      searchKey.icon(keyword.value, limit.value, page.value)
+    ),
     queryFn: () =>
       search({
         type: "icon",
@@ -146,6 +114,6 @@ export const useIconQuery = (
       }),
     enabled: computed(() => !!keyword.value),
     staleTime: 1000 * 60 * 5,
-    ...(initialData && { initialData }),
+    placeholderData: keepPreviousData,
   });
 };
