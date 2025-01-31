@@ -3,7 +3,7 @@ import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useIconQuery } from "~/composables/queries/useSearchQuery";
-import { useSearchSEO } from "~/composables/useSearchSEO";
+import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
 
 const route = useRoute();
 const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
@@ -19,13 +19,20 @@ const { data: iconData } = useIconQuery(
   initialData
 );
 
-const allIcons = computed(() =>
-  iconData.value?.data.map((d) => {
-    return {
-      thumb: d.urls.png_256 || "",
-      name: d.name,
-    };
-  })
+const allIcons = computed(
+  () =>
+    iconData.value?.data.map((d) => {
+      return {
+        thumb: d.urls.png_256 || "",
+        name: d.name,
+      };
+    }) || []
+);
+
+useJsonLdImagesSEO(
+  computed(() => query),
+  "Icons",
+  allIcons
 );
 </script>
 

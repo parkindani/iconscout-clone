@@ -3,7 +3,7 @@ import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useIllustrationQuery } from "~/composables/queries/useSearchQuery";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
-import { useSearchSEO } from "~/composables/useSearchSEO";
+import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
 
 const route = useRoute();
 const query = route.params.query as string; // bring search keyword from URL
@@ -27,6 +27,12 @@ const allIllustrations = computed(
         name: d.name,
       };
     }) || []
+);
+
+useJsonLdImagesSEO(
+  computed(() => query),
+  "Illustrations",
+  allIllustrations
 );
 </script>
 

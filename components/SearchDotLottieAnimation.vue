@@ -5,7 +5,7 @@ import { ref, computed, watch } from "vue";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useLottieQuery } from "~/composables/queries/useSearchQuery";
 import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
-import { useSearchSEO } from "~/composables/useSearchSEO";
+import { useSearchSEO, useJsonLdLottieSEO } from "~/composables/useSearchSEO";
 
 const route = useRoute();
 const query = route.params.query as string; // bring search keyword from URL
@@ -57,13 +57,19 @@ watch(
   }
 );
 
-const allLottieAnimations = computed(() =>
-  lottieData.value?.pages.flatMap(
-    (page) =>
-      page.data.map(({ uuid, name }) => {
-        return { uuid, name };
-      }) || []
-  )
+const allLottieAnimations = computed(
+  () =>
+    lottieData.value?.pages.flatMap(
+      (page) =>
+        page.data.map(({ uuid, name }) => {
+          return { uuid, name };
+        }) || []
+    ) || []
+);
+
+useJsonLdLottieSEO(
+  computed(() => query),
+  allLottieAnimations
 );
 </script>
 

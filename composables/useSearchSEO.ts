@@ -21,3 +21,50 @@ export const useSearchSEO = (query: Ref<string>, type: string) => {
     ],
   });
 };
+
+export const useJsonLdImagesSEO = (
+  query: Ref<string>,
+  type: string,
+  imageData: Ref<{ thumb: string; name: string }[]>
+) => {
+  useHead({
+    script: [
+      {
+        type: "application/ld+json",
+        innerHTML: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SearchResultsPage",
+          mainEntity: imageData.value.map((image, index) => ({
+            "@type": "ImageObject",
+            url: image.thumb,
+            name: image.name,
+            position: index + 1,
+          })),
+          headline: `Search ${type} results for ${query.value}`,
+        }),
+      },
+    ],
+  });
+};
+
+export const useJsonLdLottieSEO = (
+  query: Ref<string>,
+  lottieData: Ref<{ uuid: string; name: string }[]>
+) => {
+  useHead({
+    script: [
+      {
+        type: "application/ld+json",
+        innerHTML: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SearchResultsPage",
+          mainEntity: lottieData.value.map((lottie, index) => ({
+            name: lottie.name,
+            position: index + 1,
+          })),
+          headline: `Search lottie animation results for ${query.value}`,
+        }),
+      },
+    ],
+  });
+};
