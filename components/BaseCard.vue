@@ -31,10 +31,7 @@ const props = defineProps<{
   height: 210px;
   width: 280px;
   padding: 8px 12px;
-  border-top-left-radius: 8px 12px;
-  border-top-right-radius: 8px 12px;
-  border-bottom-right-radius: 8px 12px;
-  border-bottom-left-radius: 8px 12px;
+  border-radius: 8px;
   background-color: #ffffff;
 
   button {
