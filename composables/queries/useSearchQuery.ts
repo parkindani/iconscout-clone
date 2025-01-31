@@ -3,7 +3,11 @@ import { type Ref, computed } from "vue";
 import type { SearchAssetResponse } from "~/types/api";
 
 import { search } from "../apis/useSearchApi";
-import { useQuery, useInfiniteQuery } from "@tanstack/vue-query";
+import {
+  useQuery,
+  useInfiniteQuery,
+  keepPreviousData,
+} from "@tanstack/vue-query";
 import { searchKey } from "./queryKeys";
 
 export const useLottieQuery = (
@@ -91,28 +95,11 @@ export const useIllustrationQuery = (
 
 export const use3DQuery = (
   keyword: Ref<string>,
-  initial: Ref<SearchAssetResponse | null>,
   { limit = ref(20), page = ref(1) } = {}
 ) => {
-  let initialData = null;
-
-  if (initial.value) {
-    const {
-      response: {
-        items: { data, total, last_page, current_page },
-      },
-    } = initial.value;
-    initialData = {
-      data,
-      total,
-      lastPage: last_page,
-      currentPage: current_page,
-    };
-  }
-
   return useQuery({
     queryKey: computed(() =>
-      searchKey.threeDimensional(keyword.value, limit.value)
+      searchKey.threeDimensional(keyword.value, limit.value, page.value)
     ),
     queryFn: () =>
       search({
@@ -123,7 +110,7 @@ export const use3DQuery = (
       }),
     enabled: computed(() => !!keyword.value),
     staleTime: 1000 * 60 * 5,
-    ...(initialData && { initialData }),
+    placeholderData: keepPreviousData,
   });
 };
 

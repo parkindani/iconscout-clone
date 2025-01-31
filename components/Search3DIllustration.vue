@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { use3DQuery } from "~/composables/queries/useSearchQuery";
 import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
@@ -17,21 +17,35 @@ useSearchSEO(
   "3D Illustrations"
 );
 
+const page = ref(1);
+
 const { initialData } = await useSsrSearch(query, "3d");
 const { data: threeDData } = use3DQuery(
   computed(() => query),
-  initialData
+  {
+    page,
+  }
 );
 
-const all3DThumbnails = computed(
-  () =>
+const all3DThumbnails = computed(() => {
+  if (!threeDData.value) {
+    const data = initialData.value?.response?.items?.data || [];
+    return data.map((d) => {
+      return {
+        thumb: d.urls?.thumb || "",
+        name: d.name,
+      };
+    });
+  }
+  return (
     threeDData.value?.data.map((d) => {
       return {
         thumb: d.urls?.thumb || "",
         name: d.name,
       };
     }) || []
-);
+  );
+});
 
 const total = computed(() => threeDData.value?.total || 0);
 
@@ -40,6 +54,16 @@ useJsonLdImagesSEO(
   "3D Illustrations",
   all3DThumbnails
 );
+
+const goPrevPage = () => {
+  if (page.value === 1) return;
+  page.value -= 1;
+};
+
+const goNextPage = () => {
+  if (threeDData.value?.currentPage === threeDData.value?.lastPage) return;
+  page.value += 1;
+};
 </script>
 
 <template>
@@ -60,5 +84,43 @@ useJsonLdImagesSEO(
         <span class="sr-only">{{ thumbnail.name }}</span>
       </article>
     </div>
+    <div v-if="!props.hideSubNavBar" class="pagination">
+      <b-button
+        v-if="(threeDData?.currentPage || 0) > 1"
+        @click="goPrevPage"
+        size="lg"
+        variant="outline-primary"
+        >Prev page</b-button
+      >
+      <b-button @click="goNextPage" size="lg" variant="primary" class="next"
+        >Next page</b-button
+      >
+      <div class="page-stauts">
+        {{ threeDData?.currentPage }} / {{ threeDData?.lastPage }} Pages
+      </div>
+    </div>
   </section>
 </template>
+
+<style lang="scss" scoped>
+.pagination {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 70px;
+  margin-top: 20px;
+  column-gap: 15px;
+
+  button.next {
+    background-color: #0092e4;
+    border-color: #0092e4;
+  }
+
+  .page-stauts {
+    position: absolute;
+    right: 20px;
+  }
+}
+</style>

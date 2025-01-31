@@ -18,7 +18,7 @@ export const search = async ({
       query: keyword,
       product_type: "item",
       asset: type,
-      price: "free",
+      price: type === "lottie" ? "free" : undefined,
       per_page: limit,
       page: page,
       sort: "relevant",

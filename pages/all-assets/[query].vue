@@ -18,9 +18,9 @@ keyword.value = query;
     <main class="flex-grow-1 bg-light">
       <SubNavBar page="All Assets" />
       <!-- Search Results -->
-      <SearchIllustration hide-sub-nav-bar />
       <Search3DIllustration hide-sub-nav-bar />
       <SearchLottieAnimation hide-sub-nav-bar only-first-page />
+      <SearchIllustration hide-sub-nav-bar />
       <SearchIcon hide-sub-nav-bar />
     </main>
     <TheFooter />
