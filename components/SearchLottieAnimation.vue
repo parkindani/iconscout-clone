@@ -25,47 +25,59 @@ const {
   data: lottieData,
   fetchNextPage,
   hasNextPage,
+  isLoading,
 } = useLottieQuery(
   computed(() => query),
-  initialData
+  initialData,
+  false
 );
 
-const { $targetRef: $bottomRef, isIntersecting } = useIntersectionObserver({
-  onIntersect: (isIntersecting) => {
-    if (props.onlyFirstPage) return;
-    if (!isIntersecting || !hasNextPage.value || !query) return;
-    return fetchNextPage();
-  },
-});
-
-const isInitialSearchLoading = ref(true);
+const { $targetRef: $bottomRef, isIntersecting } = useIntersectionObserver();
 
 watch(
   [
+    () => isLoading.value,
     () => query,
-    () => isInitialSearchLoading.value,
     () => isIntersecting.value,
     () => hasNextPage.value,
   ],
   () => {
-    if (!isInitialSearchLoading.value || !query) return;
-    if (isIntersecting.value || !hasNextPage.value) {
-      fetchNextPage();
-    } else {
-      isInitialSearchLoading.value = false;
+    if (isLoading.value) {
+      return;
     }
+
+    if (!query) {
+      return;
+    }
+
+    if (!isIntersecting.value) {
+      return;
+    }
+
+    if (!hasNextPage.value) {
+      return;
+    }
+
+    console.log("fetchNextPage");
+    return fetchNextPage();
   }
 );
 
-const allLottieAnimations = computed(
-  () =>
+const allLottieAnimations = computed(() => {
+  const list =
     lottieData.value?.pages.flatMap(
       (page) =>
         page.data.map(({ uuid, name }) => {
           return { uuid, name };
         }) || []
-    ) || []
-);
+    ) || [];
+
+  if (props.onlyFirstPage) {
+    return list.slice(0, 10);
+  }
+
+  return list;
+});
 
 const total = computed(() => lottieData.value?.pages[0].total || 0);
 
