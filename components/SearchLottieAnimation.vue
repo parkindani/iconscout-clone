@@ -25,24 +25,45 @@ const {
   data: lottieData,
   fetchNextPage,
   hasNextPage,
-  isLoading,
+  isFetchingNextPage,
 } = useLottieQuery(
   computed(() => query),
   initialData,
   false
 );
 
-const { $targetRef: $bottomRef, isIntersecting } = useIntersectionObserver();
+const isInitialSearchLoading = ref(true);
+const loadCount = ref(0);
+
+const { $targetRef: $bottomRef, isIntersecting } = useIntersectionObserver({
+  onIntersect: async (isIntersecting) => {
+    if (props.onlyFirstPage) {
+      return;
+    }
+
+    if (!isIntersecting || !hasNextPage.value || !query) {
+      return;
+    }
+
+    await fetchNextPage();
+    loadCount.value++;
+  },
+});
 
 watch(
   [
-    () => isLoading.value,
     () => query,
+    () => isInitialSearchLoading.value,
     () => isIntersecting.value,
     () => hasNextPage.value,
+    () => loadCount.value,
   ],
-  () => {
-    if (isLoading.value) {
+  async () => {
+    if (props.onlyFirstPage) {
+      return;
+    }
+
+    if (!isInitialSearchLoading.value) {
       return;
     }
 
@@ -50,16 +71,23 @@ watch(
       return;
     }
 
-    if (!isIntersecting.value) {
-      return;
-    }
-
     if (!hasNextPage.value) {
+      isInitialSearchLoading.value = false;
       return;
     }
 
-    console.log("fetchNextPage");
-    return fetchNextPage();
+    if (isFetchingNextPage.value) {
+      return;
+    }
+
+    if (isIntersecting.value && hasNextPage.value) {
+      await fetchNextPage();
+      loadCount.value++;
+      return;
+    } else {
+      isInitialSearchLoading.value = false;
+      return;
+    }
   }
 );
 
@@ -100,9 +128,13 @@ useJsonLdLottieSEO(
         <LottieCard :uuid="lottie.uuid" />
         <span class="sr-only">{{ lottie.name }}</span>
       </article>
+      <article v-if="!props.onlyFirstPage && !hasNextPage">
+        <!-- TODO: create contents end card -->
+        <div>The end</div>
+      </article>
     </div>
 
     <!-- MARK: empty div to check end -->
-    <div ref="$bottomRef"></div>
+    <div v-if="!props.onlyFirstPage" ref="$bottomRef"></div>
   </section>
 </template>

@@ -10,7 +10,7 @@ export const useLottieQuery = (
   keyword: Ref<string>,
   initial: Ref<SearchAssetResponse | null>,
   onlyFirstPage?: boolean,
-  { limit = ref(30) } = {}
+  { limit = ref(20) } = {}
 ) => {
   let initialDataPage = null;
 
@@ -54,7 +54,7 @@ export const useLottieQuery = (
 export const useIllustrationQuery = (
   keyword: Ref<string>,
   initial: Ref<SearchAssetResponse | null>,
-  { limit = ref(30), page = ref(1) } = {}
+  { limit = ref(20), page = ref(1) } = {}
 ) => {
   let initialData = null;
 
@@ -92,7 +92,7 @@ export const useIllustrationQuery = (
 export const use3DQuery = (
   keyword: Ref<string>,
   initial: Ref<SearchAssetResponse | null>,
-  { limit = ref(30), page = ref(1) } = {}
+  { limit = ref(20), page = ref(1) } = {}
 ) => {
   let initialData = null;
 
@@ -130,7 +130,7 @@ export const use3DQuery = (
 export const useIconQuery = (
   keyword: Ref<string>,
   initial: Ref<SearchAssetResponse | null>,
-  { limit = ref(30), page = ref(1) } = {}
+  { limit = ref(20), page = ref(1) } = {}
 ) => {
   let initialData = null;
 

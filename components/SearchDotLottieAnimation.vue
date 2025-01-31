@@ -25,20 +25,29 @@ const {
   data: lottieData,
   fetchNextPage,
   hasNextPage,
+  isFetchingNextPage,
 } = useLottieQuery(
   computed(() => query),
   initialData
 );
 
+const isInitialSearchLoading = ref(true);
+const loadCount = ref(0);
+
 const { $targetRef: $bottomRef, isIntersecting } = useIntersectionObserver({
-  onIntersect: (isIntersecting) => {
-    if (props.onlyFirstPage) return;
-    if (!isIntersecting || !hasNextPage.value || !query) return;
-    return fetchNextPage();
+  onIntersect: async (isIntersecting) => {
+    if (props.onlyFirstPage) {
+      return;
+    }
+
+    if (!isIntersecting || !hasNextPage.value || !query) {
+      return;
+    }
+
+    await fetchNextPage();
+    loadCount.value++;
   },
 });
-
-const isInitialSearchLoading = ref(true);
 
 watch(
   [
@@ -46,13 +55,37 @@ watch(
     () => isInitialSearchLoading.value,
     () => isIntersecting.value,
     () => hasNextPage.value,
+    () => loadCount.value,
   ],
-  () => {
-    if (!isInitialSearchLoading.value || !query) return;
-    if (isIntersecting.value || !hasNextPage.value) {
-      fetchNextPage();
+  async () => {
+    if (props.onlyFirstPage) {
+      return;
+    }
+
+    if (!isInitialSearchLoading.value) {
+      return;
+    }
+
+    if (!query) {
+      return;
+    }
+
+    if (!hasNextPage.value) {
+      isInitialSearchLoading.value = false;
+      return;
+    }
+
+    if (isFetchingNextPage.value) {
+      return;
+    }
+
+    if (isIntersecting.value && hasNextPage.value) {
+      await fetchNextPage();
+      loadCount.value++;
+      return;
     } else {
       isInitialSearchLoading.value = false;
+      return;
     }
   }
 );
@@ -87,6 +120,10 @@ useJsonLdLottieSEO(
       <article v-for="(lottie, i) in allLottieAnimations" :key="i">
         <DotLottieCard :uuid="lottie.uuid" />
         <span class="sr-only">{{ lottie.name }}</span>
+      </article>
+      <article v-if="!props.onlyFirstPage && !hasNextPage">
+        <!-- TODO: create contents end card -->
+        <div>The end</div>
       </article>
     </div>
 
