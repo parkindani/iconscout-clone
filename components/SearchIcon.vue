@@ -5,30 +5,41 @@ import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useIconQuery } from "~/composables/queries/useSearchQuery";
 import { useSearchSEO } from "~/composables/useSearchSEO";
 
+const route = useRoute();
+const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
+
 useSearchSEO(
   computed(() => query),
   "Icons"
 );
 
-const route = useRoute();
-const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
-
 const { initialData } = await useSsrSearch(query, "icon");
-const { data: threeDData } = useIconQuery(
+const { data: iconData } = useIconQuery(
   computed(() => query),
   initialData
 );
 
-const allIconThumbnails = computed(() =>
-  threeDData.value?.data.map((d) => d.urls.png_256)
+const allIcons = computed(() =>
+  iconData.value?.data.map((d) => {
+    return {
+      thumb: d.urls.png_256 || "",
+      name: d.name,
+    };
+  })
 );
 </script>
 
 <template>
   <section class="container-fluid py-4">
     <div class="d-flex flex-wrap justify-content-start gap-2">
-      <article v-for="(thumb, i) in allIconThumbnails" :key="i">
-        <ImageCard v-if="thumb" :src="thumb" is-icon />
+      <article v-for="(icon, i) in allIcons" :key="i">
+        <ImageCard
+          v-if="icon.thumb"
+          :src="icon.thumb"
+          :name="icon.name"
+          is-icon
+        />
+        <span class="sr-only">{{ icon.name }}</span>
       </article>
     </div>
   </section>

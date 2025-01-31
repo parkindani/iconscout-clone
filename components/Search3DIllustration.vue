@@ -5,13 +5,13 @@ import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { use3DQuery } from "~/composables/queries/useSearchQuery";
 import { useSearchSEO } from "~/composables/useSearchSEO";
 
+const route = useRoute();
+const query = route.params.query as string; // bring search keyword from URL
+
 useSearchSEO(
   computed(() => query),
   "3D Illustrations"
 );
-
-const route = useRoute();
-const query = route.params.query as string; // bring search keyword from URL
 
 const { initialData } = await useSsrSearch(query, "3d");
 const { data: threeDData } = use3DQuery(
@@ -19,16 +19,31 @@ const { data: threeDData } = use3DQuery(
   initialData
 );
 
-const all3DThumbnails = computed(() =>
-  threeDData.value?.data.map((d) => d.urls.thumb)
+const all3DThumbnails = computed(
+  () =>
+    threeDData.value?.data.map((d) => {
+      return {
+        thumb: d.urls?.thumb || "",
+        name: d.name,
+      };
+    }) || []
 );
 </script>
 
 <template>
   <section class="container-fluid py-4">
-    <div class="d-flex flex-wrap justify-content-start gap-2">
-      <article v-for="(thumb, i) in all3DThumbnails" :key="i">
-        <ImageCard v-if="thumb" :src="thumb" />
+    <div
+      role="region"
+      aria-label="3D animations search results"
+      class="d-flex flex-wrap justify-content-start gap-2"
+    >
+      <article v-for="(thumbnail, i) in all3DThumbnails" :key="i">
+        <ImageCard
+          v-if="thumbnail.thumb"
+          :src="thumbnail.thumb"
+          :name="thumbnail.name"
+        />
+        <span class="sr-only">{{ thumbnail.name }}</span>
       </article>
     </div>
   </section>

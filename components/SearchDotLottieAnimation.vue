@@ -7,13 +7,13 @@ import { useLottieQuery } from "~/composables/queries/useSearchQuery";
 import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
 import { useSearchSEO } from "~/composables/useSearchSEO";
 
+const route = useRoute();
+const query = route.params.query as string; // bring search keyword from URL
+
 useSearchSEO(
   computed(() => query),
   "Lottie Animations"
 );
-
-const route = useRoute();
-const query = route.params.query as string; // bring search keyword from URL
 
 const props = defineProps<{
   onlyFirstPage?: boolean;
@@ -57,16 +57,26 @@ watch(
   }
 );
 
-const allUuids = computed(() =>
-  lottieData.value?.pages.flatMap((page) => page.data.map((d) => d.uuid) || [])
+const allLottieAnimations = computed(() =>
+  lottieData.value?.pages.flatMap(
+    (page) =>
+      page.data.map(({ uuid, name }) => {
+        return { uuid, name };
+      }) || []
+  )
 );
 </script>
 
 <template>
   <section class="container-fluid py-4">
-    <div class="d-flex flex-wrap justify-content-start gap-2">
-      <article v-for="(uuid, i) in allUuids" :key="i">
-        <DotLottieCard :uuid="uuid" />
+    <div
+      role="region"
+      aria-label="Lottie animation search results"
+      class="d-flex flex-wrap justify-content-start gap-2"
+    >
+      <article v-for="(lottie, i) in allLottieAnimations" :key="i">
+        <DotLottieCard :uuid="lottie.uuid" />
+        <span class="sr-only">{{ lottie.name }}</span>
       </article>
     </div>
 
