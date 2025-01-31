@@ -1,11 +1,18 @@
 <script setup lang="ts">
 const props = defineProps<{
   isIconCard?: boolean;
+  isLottie?: boolean;
 }>();
 </script>
 
 <template>
-  <div class="card-container" :class="{ 'icon-card': props.isIconCard }">
+  <div
+    class="card-container"
+    :class="{
+      'icon-card': props.isIconCard,
+      'lottie-card': props.isLottie,
+    }"
+  >
     <slot></slot>
     <button class="folder-icon">
       <SvgoIcoFolderPlus filled />
@@ -64,5 +71,10 @@ const props = defineProps<{
 .icon-card {
   height: 140px;
   width: 140px;
+}
+
+.lottie-card {
+  padding: 0;
+  overflow: clip;
 }
 </style>

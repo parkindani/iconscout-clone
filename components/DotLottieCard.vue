@@ -7,7 +7,7 @@ import BaseCard from "./BaseCard.vue";
 
 const props = defineProps<{
   /**
-   * The URL of the Lottie animation file.
+   * The uuid of the Lottie animation file.
    */
   uuid: string;
 }>();
@@ -18,14 +18,38 @@ const lottieData = computed(() => JSON.stringify(data.value));
 </script>
 
 <template>
-  <BaseCard>
+  <BaseCard is-lottie>
     <template v-if="isLoading">
       <div class="loading"></div>
     </template>
     <template v-else>
       <ClientOnly>
-        <DotLottieVue autoplay loop :data="lottieData"></DotLottieVue>
+        <div class="lottie-container">
+          <DotLottieVue autoplay loop :data="lottieData"></DotLottieVue>
+        </div>
       </ClientOnly>
     </template>
   </BaseCard>
 </template>
+
+<style scoped>
+.loading {
+  background-color: #d9d9d9;
+  height: 210px;
+  width: 280px;
+}
+
+.lottie-container {
+  display: flex;
+  height: 210px;
+  width: 280px;
+  padding: 8px 12px;
+  justify-content: center;
+  align-items: center;
+
+  :deep(div) {
+    height: 100%;
+    aspect-ratio: 448/224;
+  }
+}
+</style>
