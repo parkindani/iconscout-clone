@@ -1,7 +1,6 @@
-import { ref, onMounted } from "vue";
-
 export const useFakeAuth = () => {
-  const isAuthenticated = ref(false);
+  const isAuthenticated = useState<boolean>("isAuthenticated", () => false);
+
   const login = () => {
     isAuthenticated.value = true;
     localStorage.setItem("isAuthenticated", "true");
@@ -10,15 +9,15 @@ export const useFakeAuth = () => {
   const logout = () => {
     isAuthenticated.value = false;
     localStorage.removeItem("isAuthenticated");
+    window?.location.reload();
   };
 
   onMounted(() => {
-    if (typeof localStorage === "undefined") {
-      isAuthenticated.value = false;
-      return;
+    if (typeof localStorage !== "undefined") {
+      isAuthenticated.value =
+        localStorage.getItem("isAuthenticated") === "true";
     }
-    isAuthenticated.value = localStorage.getItem("isAuthenticated") === "true";
   });
 
-  return { login, logout, isAuthenticated };
+  return { isAuthenticated, login, logout };
 };

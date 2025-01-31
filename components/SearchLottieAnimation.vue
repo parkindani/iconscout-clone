@@ -6,6 +6,7 @@ import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useLottieQuery } from "~/composables/queries/useSearchQuery";
 import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
 import { useSearchSEO, useJsonLdLottieSEO } from "~/composables/useSearchSEO";
+import { useFakeAuth } from "~/composables/useFakeAuth";
 
 const route = useRoute();
 const query = route.params.query as string; // bring search keyword from URL
@@ -32,12 +33,19 @@ const {
   false
 );
 
+const { isAuthenticated, login } = useFakeAuth();
 const isInitialSearchLoading = ref(true);
 const loadCount = ref(0);
+const isBlocked = ref(false);
 
 const { $targetRef: $bottomRef, isIntersecting } = useIntersectionObserver({
   onIntersect: async (isIntersecting) => {
     if (props.onlyFirstPage) {
+      return;
+    }
+
+    if (!isAuthenticated.value && loadCount.value >= 1) {
+      isBlocked.value = true;
       return;
     }
 
@@ -81,6 +89,12 @@ watch(
     }
 
     if (isIntersecting.value && hasNextPage.value) {
+      if (!isAuthenticated.value && loadCount.value >= 1) {
+        isBlocked.value = true;
+        isInitialSearchLoading.value = false;
+        return;
+      }
+
       await fetchNextPage();
       loadCount.value++;
       return;
@@ -109,6 +123,14 @@ const allLottieAnimations = computed(() => {
 
 const total = computed(() => lottieData.value?.pages[0].total || 0);
 
+const onLogin = () => {
+  login();
+  isBlocked.value = false;
+  if (isIntersecting.value) {
+    fetchNextPage();
+  }
+};
+
 useJsonLdLottieSEO(
   computed(() => query),
   allLottieAnimations
@@ -134,7 +156,74 @@ useJsonLdLottieSEO(
       </article>
     </div>
 
+    <div v-if="isBlocked" class="blocker">
+      <h6>View all Limit 3D Illustrations</h6>
+      <button @click="onLogin" class="btn btn-primary">
+        Get Started - It's Free
+      </button>
+      <p>Already have an account? <strong @click="onLogin">Log In</strong></p>
+    </div>
+
     <!-- MARK: empty div to check end -->
     <div v-if="!props.onlyFirstPage" ref="$bottomRef"></div>
   </section>
 </template>
+
+<style lang="scss" scoped>
+section {
+  position: relative;
+
+  .blocker {
+    height: 402px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.99)
+    );
+    color: white;
+    z-index: 100;
+
+    h6 {
+      font-size: 24px;
+      line-height: 36px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #000000;
+    }
+
+    button {
+      background-color: #0092e4;
+      padding: 13px 48px;
+      color: #ffffff;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-size: 18px;
+      line-height: 28px;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 400;
+      margin-bottom: 51px;
+      color: #000000;
+
+      strong {
+        cursor: pointer;
+        font-weight: 600;
+        color: #0092e4;
+      }
+    }
+  }
+}
+</style>
