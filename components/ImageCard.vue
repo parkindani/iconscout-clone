@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BaseCard from "./BaseCard.vue";
 const props = defineProps<{
   /**
    * The src of the image.

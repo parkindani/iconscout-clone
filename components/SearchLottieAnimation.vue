@@ -150,9 +150,11 @@ useJsonLdLottieSEO(
         <LottieCard :uuid="lottie.uuid" />
         <span class="sr-only">{{ lottie.name }}</span>
       </article>
+      <article v-if="!props.onlyFirstPage && isFetchingNextPage">
+        <LoadingCard />
+      </article>
       <article v-if="!props.onlyFirstPage && !hasNextPage">
-        <!-- TODO: create contents end card -->
-        <div>The end</div>
+        <EndingCard />
       </article>
     </div>
 
