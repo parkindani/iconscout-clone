@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { ref, computed, onMounted } from "vue";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { use3DQuery } from "~/composables/queries/useSearchQuery";
 import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
 
 const route = useRoute();
+const router = useRouter();
 const query = route.params.query as string; // bring search keyword from URL
 
 const props = defineProps<{
@@ -59,14 +60,30 @@ useJsonLdImagesSEO(
   all3DThumbnails
 );
 
+onMounted(() => {
+  if (route.query.page) {
+    page.value = Number(route.query.page);
+  }
+});
+
 const goPrevPage = () => {
   if (page.value === 1) return;
   page.value -= 1;
+  router.push({
+    query: {
+      page: page.value,
+    },
+  });
 };
 
 const goNextPage = () => {
   if (threeDData.value?.currentPage === threeDData.value?.lastPage) return;
   page.value += 1;
+  router.push({
+    query: {
+      page: page.value,
+    },
+  });
 };
 </script>
 

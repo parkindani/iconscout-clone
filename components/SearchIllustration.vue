@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { ref, computed, onMounted } from "vue";
 import { useIllustrationQuery } from "~/composables/queries/useSearchQuery";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
 
 const route = useRoute();
+const router = useRouter();
 const query = route.params.query as string; // bring search keyword from URL
 
 const props = defineProps<{
@@ -59,15 +60,31 @@ useJsonLdImagesSEO(
   allIllustrations
 );
 
+onMounted(() => {
+  if (route.query.page) {
+    page.value = Number(route.query.page);
+  }
+});
+
 const goPrevPage = () => {
   if (page.value === 1) return;
   page.value -= 1;
+  router.push({
+    query: {
+      page: page.value,
+    },
+  });
 };
 
 const goNextPage = () => {
   if (illustrations.value?.currentPage === illustrations.value?.lastPage)
     return;
   page.value += 1;
+  router.push({
+    query: {
+      page: page.value,
+    },
+  });
 };
 </script>
 

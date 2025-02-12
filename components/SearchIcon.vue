@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { ref, computed, onMounted } from "vue";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useIconQuery } from "~/composables/queries/useSearchQuery";
 import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
 
 const route = useRoute();
+const router = useRouter();
 const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
 
 const props = defineProps<{
@@ -59,14 +60,30 @@ useJsonLdImagesSEO(
   allIcons
 );
 
+onMounted(() => {
+  if (route.query.page) {
+    page.value = Number(route.query.page);
+  }
+});
+
 const goPrevPage = () => {
   if (page.value === 1) return;
   page.value -= 1;
+  router.push({
+    query: {
+      page: page.value,
+    },
+  });
 };
 
 const goNextPage = () => {
   if (iconData.value?.currentPage === iconData.value?.lastPage) return;
   page.value += 1;
+  router.push({
+    query: {
+      page: page.value,
+    },
+  });
 };
 </script>
 
