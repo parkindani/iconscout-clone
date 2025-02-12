@@ -38,9 +38,11 @@ const search = () => {
         <!-- Logo and Brand Name -->
         <b-col cols="auto" class="d-flex align-items-center">
           <RouterLink to="/">
-            <b-navbar-brand href="#" class="d-flex align-items-center">
-              <SvgoLogo filled :fontControlled="false" class="logo" />
-            </b-navbar-brand>
+            <ClientOnly>
+              <b-navbar-brand href="#" class="d-flex align-items-center">
+                <SvgoLogo filled :fontControlled="false" class="logo" />
+              </b-navbar-brand>
+            </ClientOnly>
           </RouterLink>
         </b-col>
 

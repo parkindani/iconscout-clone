@@ -18,12 +18,24 @@ const { isShowFilter, setFalse, setTrue } = useShowFilter();
 const dropdownList = Object.keys(pageList);
 
 const onClick = (title: string) => {
-  const page = pageList[title as PageNameType];
-  if (page === props.page) {
+  if (title === props.page) {
     return;
   }
+
+  const page = pageList[title as PageNameType];
+
   if (page) {
-    router.push(`${page}/${encodeURIComponent(route.params.query as string)}`);
+    const keyword = route.params.query as string;
+    router.push({
+      path: `${page}/${encodeURIComponent(keyword)}`,
+      query: {
+        ...route.query,
+        page: 1,
+        ...(title === "Lottie Animations" || title === "Dot Lottie"
+          ? { price: "free" }
+          : {}),
+      },
+    });
   }
 };
 </script>

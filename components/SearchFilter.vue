@@ -8,7 +8,7 @@ import { pageList } from "~/assets/constants";
 
 const route = useRoute();
 const router = useRouter();
-const query = route.params.query as string; // bring search keyword from URL
+const keyword = route.params.query as string; // bring search keyword from URL
 
 const props = defineProps<{
   page?: PageNameType;
@@ -45,9 +45,8 @@ watch(
       return;
     }
     if (page) {
-      // router.push(`${page}/${encodeURIComponent(query)}`);
       router.push({
-        path: `${page}/${encodeURIComponent(query)}`,
+        path: `${page}/${encodeURIComponent(keyword)}`,
         query: {
           ...route.query,
           page: 1,
