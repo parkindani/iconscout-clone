@@ -9,7 +9,7 @@ const route = useRoute();
 const query = route.params.query as string; // URL 파라미터에서 검색어 가져오기
 
 const props = defineProps<{
-  hideSubNavBar?: boolean;
+  allAssets?: boolean;
 }>();
 
 useSearchSEO(
@@ -68,21 +68,26 @@ const goNextPage = () => {
 
 <template>
   <SubHeader :count="total" label="Icons" />
-  <SubNavBar v-if="!props.hideSubNavBar" page="Icons" />
+  <SubNavBar v-if="!props.allAssets" page="Icons" />
   <section class="container-fluid py-4">
     <div class="d-flex flex-wrap justify-content-start gap-2">
       <article v-for="(icon, i) in allIcons" :key="i">
-        <ImageCard
-          v-if="icon.thumb"
-          :src="icon.thumb"
-          :name="icon.name"
-          is-icon
-        />
-        <span class="sr-only">{{ icon.name }}</span>
+        <LastCardWrapper
+          :link="`/icons/${query}`"
+          :is-last-card="props.allAssets && i === allIcons.length - 1"
+        >
+          <ImageCard
+            v-if="icon.thumb"
+            :src="icon.thumb"
+            :name="icon.name"
+            is-icon
+          />
+          <span class="sr-only">{{ icon.name }}</span>
+        </LastCardWrapper>
       </article>
     </div>
     <PaginationBar
-      v-if="!props.hideSubNavBar"
+      v-if="!props.allAssets"
       :current-page="iconData?.currentPage || 1"
       :last-page="iconData?.lastPage || 1"
       @prev="goPrevPage"

@@ -18,10 +18,10 @@ keyword.value = query;
     <main class="flex-grow-1 bg-light">
       <SubNavBar page="All Assets" />
       <!-- Search Results -->
-      <Search3DIllustration hide-sub-nav-bar />
-      <SearchLottieAnimation hide-sub-nav-bar only-first-page />
-      <SearchIllustration hide-sub-nav-bar />
-      <SearchIcon hide-sub-nav-bar />
+      <Search3DIllustration all-assets />
+      <SearchLottieAnimation all-assets />
+      <SearchIllustration all-assets />
+      <SearchIcon all-assets />
     </main>
     <TheFooter />
   </div>

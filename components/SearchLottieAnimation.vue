@@ -17,8 +17,7 @@ useSearchSEO(
 );
 
 const props = defineProps<{
-  onlyFirstPage?: boolean;
-  hideSubNavBar?: boolean;
+  allAssets?: boolean;
 }>();
 
 const { initialData } = await useSsrSearch(query, "lottie");
@@ -40,7 +39,7 @@ const isBlocked = ref(false);
 
 const { $targetRef: $bottomRef, isIntersecting } = useIntersectionObserver({
   onIntersect: async (isIntersecting) => {
-    if (props.onlyFirstPage) {
+    if (props.allAssets) {
       return;
     }
 
@@ -67,7 +66,7 @@ watch(
     () => loadCount.value,
   ],
   async () => {
-    if (props.onlyFirstPage) {
+    if (props.allAssets) {
       return;
     }
 
@@ -114,7 +113,7 @@ const allLottieAnimations = computed(() => {
         }) || []
     ) || [];
 
-  if (props.onlyFirstPage) {
+  if (props.allAssets) {
     return list.slice(0, 10);
   }
 
@@ -139,7 +138,7 @@ useJsonLdLottieSEO(
 
 <template>
   <SubHeader :count="total" label="Lottie Animations" />
-  <SubNavBar v-if="!props.hideSubNavBar" page="Lottie Animations" />
+  <SubNavBar v-if="!props.allAssets" page="Lottie Animations" />
   <section class="container-fluid py-4">
     <div
       role="region"
@@ -147,13 +146,20 @@ useJsonLdLottieSEO(
       class="d-flex flex-wrap justify-content-start gap-2"
     >
       <article v-for="(lottie, i) in allLottieAnimations" :key="i">
-        <LottieCard :uuid="lottie.uuid" />
-        <span class="sr-only">{{ lottie.name }}</span>
+        <LastCardWrapper
+          :link="`/lottie-animations/${query}`"
+          :is-last-card="
+            props.allAssets && i === allLottieAnimations.length - 1
+          "
+        >
+          <LottieCard :uuid="lottie.uuid" />
+          <span class="sr-only">{{ lottie.name }}</span>
+        </LastCardWrapper>
       </article>
-      <article v-if="!props.onlyFirstPage && isFetchingNextPage">
+      <article v-if="!props.allAssets && isFetchingNextPage">
         <LoadingCard />
       </article>
-      <article v-if="!props.onlyFirstPage && !hasNextPage">
+      <article v-if="!props.allAssets && !hasNextPage">
         <EndingCard />
       </article>
     </div>
@@ -167,7 +173,7 @@ useJsonLdLottieSEO(
     </div>
 
     <!-- MARK: empty div to check end -->
-    <div v-if="!props.onlyFirstPage" ref="$bottomRef"></div>
+    <div v-if="!props.allAssets" ref="$bottomRef"></div>
   </section>
 </template>
 

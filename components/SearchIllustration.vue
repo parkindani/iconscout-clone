@@ -9,7 +9,7 @@ const route = useRoute();
 const query = route.params.query as string; // bring search keyword from URL
 
 const props = defineProps<{
-  hideSubNavBar?: boolean;
+  allAssets?: boolean;
 }>();
 
 useSearchSEO(
@@ -69,7 +69,7 @@ const goNextPage = () => {
 
 <template>
   <SubHeader :count="total" label="Illustrations" />
-  <SubNavBar v-if="!props.hideSubNavBar" page="Illustrations" />
+  <SubNavBar v-if="!props.allAssets" page="Illustrations" />
   <section class="container-fluid py-4">
     <div
       role="region"
@@ -77,16 +77,22 @@ const goNextPage = () => {
       class="d-flex flex-wrap justify-content-start gap-2"
     >
       <article v-for="(illust, i) in allIllustrations" :key="i">
-        <ImageCard
-          v-if="illust.thumb"
-          :src="illust.thumb"
-          :name="illust.name"
-        />
+        <LastCardWrapper
+          :link="`/illustrations/${query}`"
+          :is-last-card="props.allAssets && i === allIllustrations.length - 1"
+        >
+          <ImageCard
+            v-if="illust.thumb"
+            :src="illust.thumb"
+            :name="illust.name"
+          />
+        </LastCardWrapper>
+
         <span class="sr-only">{{ illust.name }}</span>
       </article>
     </div>
     <PaginationBar
-      v-if="!props.hideSubNavBar"
+      v-if="!props.allAssets"
       :current-page="illustrations?.currentPage || 1"
       :last-page="illustrations?.lastPage || 1"
       @prev="goPrevPage"

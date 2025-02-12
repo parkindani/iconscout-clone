@@ -9,7 +9,7 @@ const route = useRoute();
 const query = route.params.query as string; // bring search keyword from URL
 
 const props = defineProps<{
-  hideSubNavBar?: boolean;
+  allAssets?: boolean;
 }>();
 
 useSearchSEO(
@@ -68,7 +68,7 @@ const goNextPage = () => {
 
 <template>
   <SubHeader :count="total" label="3D Illustrations" />
-  <SubNavBar v-if="!props.hideSubNavBar" page="3D Illustrations" />
+  <SubNavBar v-if="!props.allAssets" page="3D Illustrations" />
   <section class="container-fluid py-4">
     <div
       role="region"
@@ -76,16 +76,21 @@ const goNextPage = () => {
       class="d-flex flex-wrap justify-content-start gap-2"
     >
       <article v-for="(thumbnail, i) in all3DThumbnails" :key="i">
-        <ImageCard
-          v-if="thumbnail.thumb"
-          :src="thumbnail.thumb"
-          :name="thumbnail.name"
-        />
-        <span class="sr-only">{{ thumbnail.name }}</span>
+        <LastCardWrapper
+          :link="`/3d-illustrations/${query}`"
+          :is-last-card="props.allAssets && i === all3DThumbnails.length - 1"
+        >
+          <ImageCard
+            v-if="thumbnail.thumb"
+            :src="thumbnail.thumb"
+            :name="thumbnail.name"
+          />
+          <span class="sr-only">{{ thumbnail.name }}</span>
+        </LastCardWrapper>
       </article>
     </div>
     <PaginationBar
-      v-if="!props.hideSubNavBar"
+      v-if="!props.allAssets"
       :current-page="threeDData?.currentPage || 1"
       :last-page="threeDData?.lastPage || 1"
       @prev="goPrevPage"
