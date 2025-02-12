@@ -18,11 +18,10 @@ const props = defineProps<{
 
 <style lang="scss" scoped>
 .last-card-wrapper {
-  // height: 210px;
   height: 100%;
-  // width: 280px;
   width: 100%;
   position: relative;
+  overflow: hidden;
 
   .last-card {
     position: absolute;
@@ -43,6 +42,22 @@ const props = defineProps<{
     transform: translate(-50%, -50%);
     color: white;
     text-align: center;
+  }
+}
+
+.last-card-wrapper:hover :deep(.card-container) {
+  animation: spring 400ms forwards 1;
+}
+
+@keyframes spring {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
