@@ -37,9 +37,11 @@ const search = () => {
       <b-row class="align-items-center w-100 flex-nowrap">
         <!-- Logo and Brand Name -->
         <b-col cols="auto" class="d-flex align-items-center">
-          <b-navbar-brand href="#" class="d-flex align-items-center">
-            <SvgoLogo filled :fontControlled="false" class="logo" />
-          </b-navbar-brand>
+          <RouterLink to="/">
+            <b-navbar-brand href="#" class="d-flex align-items-center">
+              <SvgoLogo filled :fontControlled="false" class="logo" />
+            </b-navbar-brand>
+          </RouterLink>
         </b-col>
 
         <!-- Search Bar -->
