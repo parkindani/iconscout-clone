@@ -5,13 +5,13 @@ type AssetUrls<T extends AssetType> = T extends "icon"
       png_64?: string;
       png_128?: string;
       png_256?: string;
-      thumb?: never; // icon에서는 thumb 사용 불가
+      thumb?: never; // can't use thumb in 'icon'
     }
   : {
       png_64?: never;
       png_128?: never;
       png_256?: never;
-      thumb?: string; // 'illustration', '3d', 'lottie'에서 thumb 사용 가능
+      thumb?: string;
     };
 
 type AssetData<T extends AssetType = AssetType> = {

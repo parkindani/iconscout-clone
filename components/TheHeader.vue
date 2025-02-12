@@ -169,7 +169,6 @@ header {
 
   input::placeholder {
     color: #2e334c;
-    font-family: "AvertaStd-Regular", sans-serif;
     font-size: 14px;
     line-height: 24px;
   }
