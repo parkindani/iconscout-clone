@@ -4,10 +4,13 @@ import { ref, computed, onMounted } from "vue";
 import { useIllustrationQuery } from "~/composables/queries/useSearchQuery";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
+import { useShowFilter } from "~/composables/useShowFilter";
 
 const route = useRoute();
 const router = useRouter();
 const query = route.params.query as string; // bring search keyword from URL
+
+const { isShowFilter } = useShowFilter();
 
 const props = defineProps<{
   allAssets?: boolean;
@@ -91,34 +94,55 @@ const goNextPage = () => {
 <template>
   <SubHeader :count="total" label="Illustrations" />
   <SubNavBar v-if="!props.allAssets" page="Illustrations" />
-  <section class="container-fluid py-4">
-    <div
-      role="region"
-      aria-label="Illustrations search results"
-      class="d-flex flex-wrap justify-content-start gap-2"
-    >
-      <article v-for="(illust, i) in allIllustrations" :key="i">
-        <LastCardWrapper
-          :link="`/illustrations/${query}`"
-          :is-last-card="props.allAssets && i === allIllustrations.length - 1"
-        >
-          <ImageCard
-            v-if="illust.thumb"
-            :is-loading="isLoading || isPlaceholderData"
-            :src="illust.thumb"
-            :name="illust.name"
-          />
-        </LastCardWrapper>
 
-        <span class="sr-only">{{ illust.name }}</span>
-      </article>
+  <div class="d-flex">
+    <Transition name="slide">
+      <SearchFilter v-if="!props.allAssets && isShowFilter" />
+    </Transition>
+    <div>
+      <section class="container-fluid py-4">
+        <div
+          role="region"
+          aria-label="Illustrations search results"
+          class="d-flex flex-wrap justify-content-start gap-2"
+        >
+          <article v-for="(illust, i) in allIllustrations" :key="i">
+            <LastCardWrapper
+              :link="`/illustrations/${query}`"
+              :is-last-card="
+                props.allAssets && i === allIllustrations.length - 1
+              "
+            >
+              <ImageCard
+                v-if="illust.thumb"
+                :is-loading="isLoading || isPlaceholderData"
+                :src="illust.thumb"
+                :name="illust.name"
+              />
+            </LastCardWrapper>
+
+            <span class="sr-only">{{ illust.name }}</span>
+          </article>
+        </div>
+        <PaginationBar
+          v-if="!props.allAssets"
+          :current-page="illustrations?.currentPage || 1"
+          :last-page="illustrations?.lastPage || 1"
+          @prev="goPrevPage"
+          @next="goNextPage"
+        />
+      </section>
     </div>
-    <PaginationBar
-      v-if="!props.allAssets"
-      :current-page="illustrations?.currentPage || 1"
-      :last-page="illustrations?.lastPage || 1"
-      @prev="goPrevPage"
-      @next="goNextPage"
-    />
-  </section>
+  </div>
 </template>
+
+<style scoped lang="scss">
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.2s linear;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+}
+</style>

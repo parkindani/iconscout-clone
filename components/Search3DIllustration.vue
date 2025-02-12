@@ -4,10 +4,13 @@ import { ref, computed, onMounted } from "vue";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { use3DQuery } from "~/composables/queries/useSearchQuery";
 import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
+import { useShowFilter } from "~/composables/useShowFilter";
 
 const route = useRoute();
 const router = useRouter();
 const query = route.params.query as string; // bring search keyword from URL
+
+const { isShowFilter } = useShowFilter();
 
 const props = defineProps<{
   allAssets?: boolean;
@@ -90,33 +93,54 @@ const goNextPage = () => {
 <template>
   <SubHeader :count="total" label="3D Illustrations" />
   <SubNavBar v-if="!props.allAssets" page="3D Illustrations" />
-  <section class="container-fluid py-4">
-    <div
-      role="region"
-      aria-label="3D animations search results"
-      class="d-flex flex-wrap justify-content-start gap-2"
-    >
-      <article v-for="(thumbnail, i) in all3DThumbnails" :key="i">
-        <LastCardWrapper
-          :link="`/3d-illustrations/${query}`"
-          :is-last-card="props.allAssets && i === all3DThumbnails.length - 1"
+
+  <div class="d-flex">
+    <Transition name="slide">
+      <SearchFilter v-if="!props.allAssets && isShowFilter" />
+    </Transition>
+    <div>
+      <section class="container-fluid py-4">
+        <div
+          role="region"
+          aria-label="3D animations search results"
+          class="d-flex flex-wrap justify-content-start gap-2"
         >
-          <ImageCard
-            v-if="thumbnail.thumb"
-            :is-loading="isLoading || isPlaceholderData"
-            :src="thumbnail.thumb"
-            :name="thumbnail.name"
-          />
-          <span class="sr-only">{{ thumbnail.name }}</span>
-        </LastCardWrapper>
-      </article>
+          <article v-for="(thumbnail, i) in all3DThumbnails" :key="i">
+            <LastCardWrapper
+              :link="`/3d-illustrations/${query}`"
+              :is-last-card="
+                props.allAssets && i === all3DThumbnails.length - 1
+              "
+            >
+              <ImageCard
+                v-if="thumbnail.thumb"
+                :is-loading="isLoading || isPlaceholderData"
+                :src="thumbnail.thumb"
+                :name="thumbnail.name"
+              />
+              <span class="sr-only">{{ thumbnail.name }}</span>
+            </LastCardWrapper>
+          </article>
+        </div>
+        <PaginationBar
+          v-if="!props.allAssets"
+          :current-page="threeDData?.currentPage || 1"
+          :last-page="threeDData?.lastPage || 1"
+          @prev="goPrevPage"
+          @next="goNextPage"
+        />
+      </section>
     </div>
-    <PaginationBar
-      v-if="!props.allAssets"
-      :current-page="threeDData?.currentPage || 1"
-      :last-page="threeDData?.lastPage || 1"
-      @prev="goPrevPage"
-      @next="goNextPage"
-    />
-  </section>
+  </div>
 </template>
+
+<style scoped lang="scss">
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.2s linear;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+}
+</style>

@@ -7,6 +7,7 @@ import { useLottieQuery } from "~/composables/queries/useSearchQuery";
 import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
 import { useSearchSEO, useJsonLdLottieSEO } from "~/composables/useSearchSEO";
 import { useFakeAuth } from "~/composables/useFakeAuth";
+import { useShowFilter } from "~/composables/useShowFilter";
 
 const route = useRoute();
 const query = route.params.query as string; // bring search keyword from URL
@@ -15,6 +16,8 @@ useSearchSEO(
   computed(() => query),
   "Lottie Animations"
 );
+
+const { isShowFilter } = useShowFilter();
 
 const props = defineProps<{
   allAssets?: boolean;
@@ -139,42 +142,52 @@ useJsonLdLottieSEO(
 <template>
   <SubHeader :count="total" label="Lottie Animations" />
   <SubNavBar v-if="!props.allAssets" page="Lottie Animations" />
-  <section class="container-fluid py-4">
-    <div
-      role="region"
-      aria-label="Lottie animation search results"
-      class="d-flex flex-wrap justify-content-start gap-2"
-    >
-      <article v-for="(lottie, i) in allLottieAnimations" :key="i">
-        <LastCardWrapper
-          :link="`/lottie-animations/${query}`"
-          :is-last-card="
-            props.allAssets && i === allLottieAnimations.length - 1
-          "
+
+  <div class="d-flex">
+    <Transition name="slide">
+      <SearchFilter v-if="!props.allAssets && isShowFilter" />
+    </Transition>
+    <div>
+      <section class="container-fluid py-4">
+        <div
+          role="region"
+          aria-label="Lottie animation search results"
+          class="d-flex flex-wrap justify-content-start gap-2"
         >
-          <LottieCard :uuid="lottie.uuid" />
-          <span class="sr-only">{{ lottie.name }}</span>
-        </LastCardWrapper>
-      </article>
-      <article v-if="!props.allAssets && isFetchingNextPage">
-        <LoadingCard />
-      </article>
-      <article v-if="!props.allAssets && !hasNextPage">
-        <EndingCard />
-      </article>
-    </div>
+          <article v-for="(lottie, i) in allLottieAnimations" :key="i">
+            <LastCardWrapper
+              :link="`/lottie-animations/${query}`"
+              :is-last-card="
+                props.allAssets && i === allLottieAnimations.length - 1
+              "
+            >
+              <LottieCard :uuid="lottie.uuid" />
+              <span class="sr-only">{{ lottie.name }}</span>
+            </LastCardWrapper>
+          </article>
+          <article v-if="!props.allAssets && isFetchingNextPage">
+            <LoadingCard />
+          </article>
+          <article v-if="!props.allAssets && !hasNextPage">
+            <EndingCard />
+          </article>
+        </div>
 
-    <div v-if="isBlocked" class="blocker">
-      <h6>View all Limit 3D Illustrations</h6>
-      <button @click="onLogin" class="btn btn-primary">
-        Get Started - It's Free
-      </button>
-      <p>Already have an account? <strong @click="onLogin">Log In</strong></p>
-    </div>
+        <div v-if="isBlocked" class="blocker">
+          <h6>View all Limit 3D Illustrations</h6>
+          <button @click="onLogin" class="btn btn-primary">
+            Get Started - It's Free
+          </button>
+          <p>
+            Already have an account? <strong @click="onLogin">Log In</strong>
+          </p>
+        </div>
 
-    <!-- MARK: empty div to check end -->
-    <div v-if="!props.allAssets" ref="$bottomRef"></div>
-  </section>
+        <!-- MARK: empty div to check end -->
+        <div v-if="!props.allAssets" ref="$bottomRef"></div>
+      </section>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -233,5 +246,16 @@ section {
       }
     }
   }
+}
+</style>
+
+<style scoped lang="scss">
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.2s linear;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
 }
 </style>
