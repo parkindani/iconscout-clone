@@ -1,5 +1,5 @@
 export const useShowFilter = () => {
-  const isShowFilter = useState<boolean>("isShowFilter", () => false);
+  const isShowFilter = useState<boolean>("isShowFilter", () => true);
   const setFalse = () => {
     isShowFilter.value = false;
   };

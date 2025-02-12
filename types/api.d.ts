@@ -60,4 +60,9 @@ export type SearchAssetRequestQuery = {
   type: AssetType;
   limit: number;
   page: number;
+  price: "all" | "free" | "premium";
+  sort: "relevant" | "popular" | "latest";
 };
+
+export type PriceType = SearchAssetRequestQuery["price"];
+export type SortType = SearchAssetRequestQuery["sort"];

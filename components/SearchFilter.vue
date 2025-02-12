@@ -1,9 +1,116 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import type { PageNameType } from "~/types";
 
-const selectedAsset = ref("all");
+import { useRoute, useRouter } from "vue-router";
+
+import { ref, watch, computed } from "vue";
+import { pageList } from "~/assets/constants";
+
+const route = useRoute();
+const router = useRouter();
+const query = route.params.query as string; // bring search keyword from URL
+
+const props = defineProps<{
+  page?: PageNameType;
+}>();
+
+const selectedAsset = ref("All Assets");
 const selectedPrice = ref("all");
-const sortBy = ref("popular");
+const sortBy = ref("relevant");
+
+const isLottiePage = computed(() => {
+  return props.page === "Lottie Animations" || props.page === "Dot Lottie";
+});
+
+watch(
+  () => props.page,
+  (newVal) => {
+    if (newVal) {
+      selectedAsset.value = newVal;
+      if (newVal === "Lottie Animations" || newVal === "Dot Lottie") {
+        selectedPrice.value = "free";
+      }
+    }
+  },
+  {
+    immediate: true,
+  }
+);
+
+watch(
+  () => selectedAsset.value,
+  (title) => {
+    const page = pageList[title as PageNameType];
+    if (page === props.page) {
+      return;
+    }
+    if (page) {
+      // router.push(`${page}/${encodeURIComponent(query)}`);
+      router.push({
+        path: `${page}/${encodeURIComponent(query)}`,
+        query: {
+          ...route.query,
+          page: 1,
+          ...(page === "Lottie Animations" || page === "Dot Lottie"
+            ? { price: "free" }
+            : {}),
+        },
+      });
+    }
+  }
+);
+
+watch(
+  () => route.query.sort,
+  (sort) => {
+    if (sort) {
+      sortBy.value = sort as string;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
+
+watch(sortBy, (sort) => {
+  if (sort === route.query.sort) {
+    return;
+  }
+
+  router.push({
+    query: {
+      ...route.query,
+      page: 1,
+      sort,
+    },
+  });
+});
+
+watch(
+  () => route.query.price,
+  (price) => {
+    if (price) {
+      selectedPrice.value = price as string;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
+
+watch(selectedPrice, (price) => {
+  if (price === route.query.price) {
+    return;
+  }
+
+  router.push({
+    query: {
+      ...route.query,
+      page: 1,
+      price,
+    },
+  });
+});
 </script>
 
 <template>
@@ -11,13 +118,17 @@ const sortBy = ref("popular");
     <!-- Asset Type -->
     <b-form-group label="Asset">
       <b-form-radio-group v-model="selectedAsset" name="asset-type" stacked>
-        <b-form-radio size="sm" value="all">All asset</b-form-radio>
-        <b-form-radio size="sm" value="3d">3D Illustrations</b-form-radio>
-        <b-form-radio size="sm" value="lottie">Lottie Animations</b-form-radio>
-        <b-form-radio size="sm" value="illustrations"
+        <b-form-radio size="sm" value="All Assets">All asset</b-form-radio>
+        <b-form-radio size="sm" value="3D Illustrations"
+          >3D Illustrations</b-form-radio
+        >
+        <b-form-radio size="sm" value="Lottie Animations"
+          >Lottie Animations</b-form-radio
+        >
+        <b-form-radio size="sm" value="Illustrations"
           >Illustrations</b-form-radio
         >
-        <b-form-radio size="sm" value="icons">Icons</b-form-radio>
+        <b-form-radio size="sm" value="Icons">Icons</b-form-radio>
       </b-form-radio-group>
     </b-form-group>
 
@@ -25,17 +136,21 @@ const sortBy = ref("popular");
     <b-form-group label="Price">
       <b-form-radio-group v-model="selectedPrice" name="price-type" stacked>
         <b-form-radio size="sm" value="free">Free</b-form-radio>
-        <b-form-radio size="sm" value="premium">Premium</b-form-radio>
-        <b-form-radio size="sm" value="all">All</b-form-radio>
+        <b-form-radio size="sm" :disabled="isLottiePage" value="premium"
+          >Premium</b-form-radio
+        >
+        <b-form-radio size="sm" :disabled="isLottiePage" value="all"
+          >All</b-form-radio
+        >
       </b-form-radio-group>
     </b-form-group>
 
     <!-- Sort By -->
     <b-form-group label="Sort by">
       <b-form-radio-group v-model="sortBy" name="sort-by" stacked>
+        <b-form-radio size="sm" value="relevant">Relevant</b-form-radio>
         <b-form-radio size="sm" value="popular">Popular</b-form-radio>
         <b-form-radio size="sm" value="latest">Latest</b-form-radio>
-        <b-form-radio size="sm" value="featured">Featured</b-form-radio>
       </b-form-radio-group>
     </b-form-group>
   </div>

@@ -1,6 +1,6 @@
 import { type Ref, computed } from "vue";
 
-import type { SearchAssetResponse } from "~/types/api";
+import type { SearchAssetResponse, PriceType, SortType } from "~/types/api";
 
 import { search } from "../apis/useSearchApi";
 import {
@@ -14,7 +14,7 @@ export const useLottieQuery = (
   keyword: Ref<string>,
   initial: Ref<SearchAssetResponse | null>,
   onlyFirstPage?: boolean,
-  { limit = ref(20) } = {}
+  { limit = ref(20), sort = ref<SortType>("relevant") } = {}
 ) => {
   let initialDataPage = null;
 
@@ -33,13 +33,17 @@ export const useLottieQuery = (
   }
 
   return useInfiniteQuery({
-    queryKey: computed(() => searchKey.lottie(keyword.value, limit.value)),
+    queryKey: computed(() =>
+      searchKey.lottie(keyword.value, limit.value, sort.value)
+    ),
     queryFn: ({ pageParam }: { pageParam: number }) =>
       search({
         type: "lottie",
         keyword: keyword.value,
         limit: limit.value,
         page: pageParam,
+        price: "free",
+        sort: sort.value,
       }),
     enabled: computed(() => !!keyword.value),
     staleTime: 1000 * 60 * 5,
@@ -57,11 +61,22 @@ export const useLottieQuery = (
 
 export const useIllustrationQuery = (
   keyword: Ref<string>,
-  { limit = ref(20), page = ref(1) } = {}
+  {
+    limit = ref(20),
+    page = ref(1),
+    price = ref<PriceType>("free"),
+    sort = ref<SortType>("relevant"),
+  } = {}
 ) => {
   return useQuery({
     queryKey: computed(() =>
-      searchKey.illustration(keyword.value, limit.value, page.value)
+      searchKey.illustration(
+        keyword.value,
+        limit.value,
+        page.value,
+        price.value,
+        sort.value
+      )
     ),
     queryFn: () =>
       search({
@@ -69,6 +84,8 @@ export const useIllustrationQuery = (
         keyword: keyword.value,
         limit: limit.value,
         page: page.value,
+        price: price.value,
+        sort: sort.value,
       }),
     enabled: computed(() => !!keyword.value),
     staleTime: 1000 * 60 * 5,
@@ -78,11 +95,22 @@ export const useIllustrationQuery = (
 
 export const use3DQuery = (
   keyword: Ref<string>,
-  { limit = ref(20), page = ref(1) } = {}
+  {
+    limit = ref(20),
+    page = ref(1),
+    price = ref<PriceType>("free"),
+    sort = ref<SortType>("relevant"),
+  } = {}
 ) => {
   return useQuery({
     queryKey: computed(() =>
-      searchKey.threeDimensional(keyword.value, limit.value, page.value)
+      searchKey.threeDimensional(
+        keyword.value,
+        limit.value,
+        page.value,
+        price.value,
+        sort.value
+      )
     ),
     queryFn: () =>
       search({
@@ -90,6 +118,8 @@ export const use3DQuery = (
         keyword: keyword.value,
         limit: limit.value,
         page: page.value,
+        price: price.value,
+        sort: sort.value,
       }),
     enabled: computed(() => !!keyword.value),
     staleTime: 1000 * 60 * 5,
@@ -99,11 +129,22 @@ export const use3DQuery = (
 
 export const useIconQuery = (
   keyword: Ref<string>,
-  { limit = ref(20), page = ref(1) } = {}
+  {
+    limit = ref(20),
+    page = ref(1),
+    price = ref<PriceType>("free"),
+    sort = ref<SortType>("relevant"),
+  } = {}
 ) => {
   return useQuery({
     queryKey: computed(() =>
-      searchKey.icon(keyword.value, limit.value, page.value)
+      searchKey.icon(
+        keyword.value,
+        limit.value,
+        page.value,
+        price.value,
+        sort.value
+      )
     ),
     queryFn: () =>
       search({
@@ -111,6 +152,8 @@ export const useIconQuery = (
         keyword: keyword.value,
         limit: limit.value,
         page: page.value,
+        price: price.value,
+        sort: sort.value,
       }),
     enabled: computed(() => !!keyword.value),
     staleTime: 1000 * 60 * 5,

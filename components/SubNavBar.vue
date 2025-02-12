@@ -10,8 +10,6 @@ const props = defineProps<{
   page?: PageNameType;
 }>();
 
-// const isShowFilter = defineModel();
-
 const route = useRoute();
 const router = useRouter();
 

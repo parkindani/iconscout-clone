@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { SortType } from "~/types/api";
+
 import { useRoute } from "vue-router";
 import { ref, computed, watch } from "vue";
 
@@ -23,6 +25,10 @@ const props = defineProps<{
   allAssets?: boolean;
 }>();
 
+const sort = computed<SortType>(
+  () => (route.query.sort as SortType) || "relevant"
+);
+
 const { initialData } = await useSsrSearch(query, "lottie");
 const {
   data: lottieData,
@@ -32,7 +38,10 @@ const {
 } = useLottieQuery(
   computed(() => query),
   initialData,
-  false
+  false,
+  {
+    sort,
+  }
 );
 
 const { isAuthenticated, login } = useFakeAuth();
@@ -145,7 +154,10 @@ useJsonLdLottieSEO(
 
   <div class="d-flex">
     <Transition name="slide">
-      <SearchFilter v-if="!props.allAssets && isShowFilter" />
+      <SearchFilter
+        v-if="!props.allAssets && isShowFilter"
+        page="Lottie Animations"
+      />
     </Transition>
     <div>
       <section class="container-fluid py-4">

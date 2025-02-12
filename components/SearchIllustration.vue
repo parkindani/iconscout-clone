@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { PriceType, SortType } from "~/types/api";
+
 import { useRoute, useRouter } from "vue-router";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useIllustrationQuery } from "~/composables/queries/useSearchQuery";
 import { useSsrSearch } from "~/composables/search/useSsrSearch";
 import { useSearchSEO, useJsonLdImagesSEO } from "~/composables/useSearchSEO";
@@ -22,6 +24,12 @@ useSearchSEO(
 );
 
 const page = ref(1);
+const sort = computed<SortType>(
+  () => (route.query.sort as SortType) || "relevant"
+);
+const price = computed<PriceType>(
+  () => (route.query.price as PriceType) || "all"
+);
 
 const { initialData } = await useSsrSearch(query, "illustration");
 const {
@@ -32,6 +40,8 @@ const {
   computed(() => query),
   {
     page,
+    sort,
+    price,
   }
 );
 
@@ -69,11 +79,21 @@ onMounted(() => {
   }
 });
 
+watch(
+  () => route.query.page,
+  (newPage) => {
+    if (newPage && Number(newPage) !== page.value) {
+      page.value = Number(newPage);
+    }
+  }
+);
+
 const goPrevPage = () => {
   if (page.value === 1) return;
   page.value -= 1;
   router.push({
     query: {
+      ...route.query,
       page: page.value,
     },
   });
@@ -85,6 +105,7 @@ const goNextPage = () => {
   page.value += 1;
   router.push({
     query: {
+      ...route.query,
       page: page.value,
     },
   });
@@ -97,7 +118,10 @@ const goNextPage = () => {
 
   <div class="d-flex">
     <Transition name="slide">
-      <SearchFilter v-if="!props.allAssets && isShowFilter" />
+      <SearchFilter
+        v-if="!props.allAssets && isShowFilter"
+        page="Illustrations"
+      />
     </Transition>
     <div>
       <section class="container-fluid py-4">

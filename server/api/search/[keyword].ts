@@ -9,6 +9,8 @@ export const search = async ({
   clientKey,
   limit,
   page,
+  sort,
+  price,
 }: SearchAssetRequestQuery & {
   keyword: string;
   clientKey: string;
@@ -18,10 +20,10 @@ export const search = async ({
       query: keyword,
       product_type: "item",
       asset: type,
-      price: type === "lottie" ? "free" : undefined,
+      price: type === "lottie" ? "free" : price,
       per_page: limit,
       page: page,
-      sort: "relevant",
+      sort: sort,
     },
     headers: {
       "Client-ID": clientKey,
@@ -39,7 +41,7 @@ export default defineEventHandler<{
   const CLIENT_KEY = config.clientId;
 
   const keyword = getRouterParam(event, "keyword");
-  const { limit, page, type } = getQuery(event);
+  const { limit, page, type, sort, price } = getQuery(event);
 
   if (!keyword) return;
 
@@ -49,6 +51,8 @@ export default defineEventHandler<{
     limit,
     page,
     clientKey: CLIENT_KEY,
+    sort,
+    ...(price && { price }),
   });
 
   return res;
