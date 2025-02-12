@@ -20,7 +20,11 @@ useSearchSEO(
 const page = ref(1);
 
 const { initialData } = await useSsrSearch(query, "illustration");
-const { data: illustrations } = useIllustrationQuery(
+const {
+  data: illustrations,
+  isPlaceholderData,
+  isLoading,
+} = useIllustrationQuery(
   computed(() => query),
   {
     page,
@@ -83,6 +87,7 @@ const goNextPage = () => {
         >
           <ImageCard
             v-if="illust.thumb"
+            :is-loading="isLoading || isPlaceholderData"
             :src="illust.thumb"
             :name="illust.name"
           />

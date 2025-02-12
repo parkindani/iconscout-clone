@@ -20,7 +20,11 @@ useSearchSEO(
 const page = ref(1);
 
 const { initialData } = await useSsrSearch(query, "icon");
-const { data: iconData } = useIconQuery(
+const {
+  data: iconData,
+  isPlaceholderData,
+  isLoading,
+} = useIconQuery(
   computed(() => query),
   {
     page,
@@ -78,6 +82,7 @@ const goNextPage = () => {
         >
           <ImageCard
             v-if="icon.thumb"
+            :is-loading="isLoading || isPlaceholderData"
             :src="icon.thumb"
             :name="icon.name"
             is-icon

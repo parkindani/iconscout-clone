@@ -20,7 +20,11 @@ useSearchSEO(
 const page = ref(1);
 
 const { initialData } = await useSsrSearch(query, "3d");
-const { data: threeDData } = use3DQuery(
+const {
+  data: threeDData,
+  isPlaceholderData,
+  isLoading,
+} = use3DQuery(
   computed(() => query),
   {
     page,
@@ -82,6 +86,7 @@ const goNextPage = () => {
         >
           <ImageCard
             v-if="thumbnail.thumb"
+            :is-loading="isLoading || isPlaceholderData"
             :src="thumbnail.thumb"
             :name="thumbnail.name"
           />

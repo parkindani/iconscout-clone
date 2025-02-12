@@ -2,6 +2,7 @@
 const props = defineProps<{
   isIconCard?: boolean;
   isLottie?: boolean;
+  isLoading?: boolean;
 }>();
 </script>
 
@@ -11,6 +12,7 @@ const props = defineProps<{
     :class="{
       'icon-card': props.isIconCard,
       'lottie-card': props.isLottie,
+      'is-loading': props.isLoading,
     }"
   >
     <slot></slot>
@@ -70,6 +72,7 @@ const props = defineProps<{
   width: 140px;
 }
 
+.is-loading,
 .lottie-card {
   padding: 0;
   overflow: clip;
