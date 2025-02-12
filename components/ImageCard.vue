@@ -37,5 +37,8 @@ img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>
